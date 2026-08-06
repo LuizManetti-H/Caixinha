@@ -84,6 +84,36 @@
     }, 2600);
   }
 
+  // ---------- Sincronização (GitHub) ----------
+  // Envia a caixinha para o repositório. Silencioso quando não há token.
+  function syncPush(trip) {
+    if (!trip || typeof Sync === 'undefined' || !Sync.isConfigured()) return;
+    Sync.pushTrip(trip).catch(function (e) {
+      if (e && e.code === 'NOT_CONFIGURED') return;
+      toast('Falha ao enviar ao GitHub: ' + (e && e.message ? e.message : 'erro'), 'error');
+    });
+  }
+
+  // Busca as edições do repositório e re-renderiza se necessário.
+  function pullAndRefresh(silent) {
+    if (typeof Sync === 'undefined' || !Sync.hasRepo()) {
+      if (!silent) toast('Sincronização não configurada.', 'error');
+      return Promise.resolve();
+    }
+    return Sync.pull().then(function () {
+      if (state.route === 'trip' && state.tripId) {
+        if (Store.getTrip(state.tripId)) render();
+        else handleRoute();
+      } else if (state.route === 'gate') {
+        // Uma caixinha nova pode ter chegado; se o gate espera um código, tenta abrir.
+        handleRoute();
+      }
+      if (!silent) toast('Sincronizado.', 'success');
+    }).catch(function (e) {
+      if (!silent) toast('Falha ao sincronizar: ' + (e && e.message ? e.message : 'erro'), 'error');
+    });
+  }
+
   // ---------- Tema ----------
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
@@ -580,11 +610,13 @@
       });
       Store.updateTrip(editId, { code: code, name: name, currency: currency, families: families, colors: colors, expenses: patchedExpenses });
       toast('Caixinha atualizada.', 'success');
+      syncPush(Store.getTrip(editId));
       closeModal($('#tripModal'));
       openTrip(editId);
     } else {
       const trip = Store.createTrip({ code: code, name: name, currency: currency, families: families, colors: colors });
       toast('Caixinha criada!', 'success');
+      syncPush(trip);
       closeModal($('#tripModal'));
       openTrip(trip.id);
     }
@@ -696,8 +728,66 @@
       });
       toast('Despesa adicionada.', 'success');
     }
+    syncPush(Store.getTrip(trip.id));
     closeModal($('#expenseModal'));
     render();
+  }
+
+  // ---------- Modal de sincronização ----------
+  function openSyncModal() {
+    const cfg = Sync.getConfig();
+    $('#syncOwner').value = cfg.owner || '';
+    $('#syncRepo').value = cfg.repo || '';
+    $('#syncBranch').value = cfg.branch || 'main';
+    $('#syncToken').value = cfg.token || '';
+    $('#syncToken').type = 'password';
+    const show = $('#syncShowToken');
+    if (show) show.checked = false;
+    const st = $('#syncStatus');
+    st.hidden = true; st.className = 'sync-status';
+    $('#syncModal').hidden = false;
+  }
+
+  function readSyncForm() {
+    return {
+      owner: $('#syncOwner').value.trim(),
+      repo: $('#syncRepo').value.trim(),
+      branch: $('#syncBranch').value.trim() || 'main',
+      token: $('#syncToken').value.trim()
+    };
+  }
+
+  function setSyncStatus(msg, kind) {
+    const st = $('#syncStatus');
+    st.textContent = msg;
+    st.className = 'sync-status' + (kind ? ' ' + kind : '');
+    st.hidden = false;
+  }
+
+  function testSync() {
+    Sync.setConfig(readSyncForm());
+    setSyncStatus('Testando…', '');
+    Sync.test().then(function (r) {
+      setSyncStatus(r.message, r.ok ? 'ok' : 'error');
+    }).catch(function (e) {
+      setSyncStatus('Erro: ' + (e && e.message ? e.message : 'falha'), 'error');
+    });
+  }
+
+  function saveSync(ev) {
+    if (ev) ev.preventDefault();
+    Sync.setConfig(readSyncForm());
+    setSyncStatus('Testando conexão…', '');
+    Sync.test().then(function (r) {
+      setSyncStatus(r.message, r.ok ? 'ok' : 'error');
+      if (r.ok) {
+        toast('Sincronização salva.', 'success');
+        closeModal($('#syncModal'));
+        pullAndRefresh(false);
+      }
+    }).catch(function (e) {
+      setSyncStatus('Erro: ' + (e && e.message ? e.message : 'falha'), 'error');
+    });
   }
 
   // ---------- Confirmação ----------
@@ -721,6 +811,7 @@
     document.addEventListener('click', function (e) {
       const act = e.target.closest('[data-action]');
       if (act && act.dataset.action === 'new-trip') openTripModal(null);
+      if (act && act.dataset.action === 'sync') openSyncModal();
     });
 
     // Gate (abrir por código)
@@ -751,6 +842,8 @@
       closeAllMenus();
       switch (action) {
         case 'edit-trip': if (currentTrip()) openTripModal(state.tripId); break;
+        case 'sync': openSyncModal(); break;
+        case 'sync-now': pullAndRefresh(false); break;
         case 'toggle-theme': toggleTheme(); break;
       }
     });
@@ -776,6 +869,13 @@
     });
     $('#tripForm').addEventListener('submit', submitTripForm);
 
+    // Sync modal
+    $('#syncForm').addEventListener('submit', saveSync);
+    $('#syncTestBtn').addEventListener('click', testSync);
+    $('#syncShowToken').addEventListener('change', function (e) {
+      $('#syncToken').type = e.target.checked ? 'text' : 'password';
+    });
+
     // Expense modal
     $('#addExpenseBtn').addEventListener('click', function () { openExpenseModal(null); });
     $('#expenseForm').addEventListener('submit', submitExpenseForm);
@@ -793,6 +893,7 @@
         confirmAction('Excluir a despesa "' + (exp && exp.desc ? exp.desc : 'sem descrição') + '"?', function () {
           Store.deleteExpense(trip.id, delBtn.dataset.del);
           toast('Despesa excluída.');
+          syncPush(Store.getTrip(trip.id));
           render();
         });
       }
@@ -837,6 +938,22 @@
     // mostramos apenas o box de entrada.
     handleRoute();
     $('#app-loading').style.display = 'none';
+
+    // Sincronização: busca o estado do repositório e mantém atualizado.
+    setupSync();
+  }
+
+  function setupSync() {
+    if (typeof Sync === 'undefined' || !Sync.hasRepo()) return;
+    pullAndRefresh(true);
+    // Atualiza periodicamente e ao voltar o foco (bom no Safari do iPhone).
+    setInterval(function () {
+      if (document.visibilityState === 'visible') pullAndRefresh(true);
+    }, 25000);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') pullAndRefresh(true);
+    });
+    window.addEventListener('focus', function () { pullAndRefresh(true); });
   }
 
   if (document.readyState === 'loading') {

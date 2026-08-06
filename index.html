@@ -40,6 +40,9 @@
           <div id="menuDropdown" class="menu-dropdown" role="menu" hidden>
             <button class="menu-item" data-action="edit-trip" role="menuitem">Editar caixinha</button>
             <div class="menu-sep"></div>
+            <button class="menu-item" data-action="sync" role="menuitem">Sincronização</button>
+            <button class="menu-item" data-action="sync-now" role="menuitem">Sincronizar agora</button>
+            <div class="menu-sep"></div>
             <button class="menu-item" data-action="toggle-theme" role="menuitem">Alternar tema</button>
           </div>
         </div>
@@ -75,6 +78,10 @@
         <div class="gate-divider"><span>ou</span></div>
         <button type="button" class="btn btn-ghost btn-lg gate-new" data-action="new-trip">
           <span>Nova Caixinha</span>
+        </button>
+        <button type="button" class="gate-sync-link" data-action="sync">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3"/><path d="M21 3v6h-6"/><path d="M3 21v-6h6"/></svg>
+          <span>Sincronização (GitHub)</span>
         </button>
       </div>
     </section>
@@ -228,6 +235,52 @@
     </div>
   </div>
 
+  <!-- Sync modal -->
+  <div class="modal-overlay" id="syncModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="syncModalTitle">
+      <div class="modal-head">
+        <h2 id="syncModalTitle">Sincronização</h2>
+        <button class="btn btn-ghost btn-icon modal-close" type="button" data-close>✕</button>
+      </div>
+      <form id="syncForm" class="modal-body">
+        <p class="sync-intro">
+          Os dados ficam no <strong>GitHub</strong>. Para ver as edições em outro
+          aparelho, todos usam o mesmo repositório. Para <strong>gravar</strong>
+          alterações, cole um token pessoal — ele fica só neste navegador.
+        </p>
+        <div class="field-row">
+          <div class="field">
+            <label for="syncOwner">Usuário/organização</label>
+            <input type="text" id="syncOwner" autocomplete="off" spellcheck="false" placeholder="Ex.: LuizManetti-H" />
+          </div>
+          <div class="field">
+            <label for="syncRepo">Repositório</label>
+            <input type="text" id="syncRepo" autocomplete="off" spellcheck="false" placeholder="Ex.: caixinha" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="syncBranch">Branch</label>
+          <input type="text" id="syncBranch" autocomplete="off" spellcheck="false" placeholder="main" />
+        </div>
+        <div class="field">
+          <label for="syncToken">Token do GitHub <span class="hint">(só para gravar; fica neste aparelho)</span></label>
+          <input type="password" id="syncToken" autocomplete="off" spellcheck="false" placeholder="github_pat_… ou ghp_…" />
+          <label class="sync-show"><input type="checkbox" id="syncShowToken" /> Mostrar token</label>
+        </div>
+        <p id="syncStatus" class="sync-status" hidden></p>
+        <p class="sync-help">
+          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Como criar um token →</a>
+          Crie um <em>Fine-grained token</em>, dê acesso só a este repositório e
+          marque <strong>Contents: Read and write</strong>.
+        </p>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" id="syncTestBtn">Testar conexão</button>
+          <button type="submit" class="btn btn-primary" id="syncSaveBtn">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Confirm modal -->
   <div class="modal-overlay" id="confirmModal" hidden>
     <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
@@ -249,6 +302,7 @@
   <script src="assets/js/calc.js"></script>
   <script src="data/seeds.js"></script>
   <script src="assets/js/store.js"></script>
+  <script src="assets/js/sync.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

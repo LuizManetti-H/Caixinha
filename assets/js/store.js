@@ -205,6 +205,11 @@
   // afetadas.
   function getSeedRevs() { return readJSON(LS_SEEDREVS, {}) || {}; }
   function saveSeedRevs(r) { writeJSON(LS_SEEDREVS, r); }
+  function setSeedRev(id, rev) {
+    const r = getSeedRevs();
+    r[id] = String(rev == null ? '' : rev);
+    saveSeedRevs(r);
+  }
 
   function reconcileSeeds(seeds) {
     const trips = getTrips();
@@ -284,6 +289,8 @@
     setCurrent: setCurrent,
     getTheme: getTheme,
     setTheme: setTheme,
-    seedFromFiles: seedFromFiles
+    seedFromFiles: seedFromFiles,
+    reconcile: reconcileSeeds,
+    setRev: setSeedRev
   };
 })(window);

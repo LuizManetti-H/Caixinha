@@ -202,31 +202,30 @@
         <button class="btn btn-ghost btn-icon modal-close" type="button" data-close>✕</button>
       </div>
       <form id="expenseForm" class="modal-body">
-        <div class="field-row">
-          <div class="field">
-            <label for="expDate">Data</label>
-            <input type="date" id="expDate" required />
-          </div>
-          <div class="field">
-            <label for="expValue">Valor <span id="expValueHint" class="hint"></span></label>
-            <input type="text" id="expValue" inputmode="decimal" placeholder="0,00 ou 58+75" required autocomplete="off" />
-          </div>
+        <div class="field">
+          <label for="expDate">Data</label>
+          <input type="date" id="expDate" required />
+        </div>
+        <div class="field">
+          <label for="expDesc">Descrição</label>
+          <input type="text" id="expDesc" placeholder="Ex.: Jantar no restaurante" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="expValue">Valor <span id="expValueHint" class="hint"></span></label>
+          <input type="text" id="expValue" inputmode="decimal" placeholder="0,00 ou 58+75" required autocomplete="off" />
         </div>
         <div class="field">
           <label for="expPayer">Quem pagou</label>
           <select id="expPayer" required></select>
         </div>
         <div class="field">
-          <label>Partes por família <span class="hint">(quantas partes cada família consome)</span></label>
+          <label>Partes por família</label>
           <div id="expParts" class="parts-grid"></div>
-        </div>
-        <div class="field">
-          <label for="expDesc">Descrição</label>
-          <input type="text" id="expDesc" placeholder="Ex.: Jantar no restaurante" autocomplete="off" />
         </div>
         <div id="expPreview" class="exp-preview"></div>
         <div class="modal-foot">
           <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="button" class="btn btn-danger" id="expenseDeleteBtn" hidden>Deletar</button>
           <button type="submit" class="btn btn-primary" id="expenseSubmitBtn">Adicionar</button>
         </div>
       </form>

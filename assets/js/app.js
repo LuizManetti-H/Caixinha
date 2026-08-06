@@ -486,23 +486,30 @@
 
     list.forEach(function (e) {
       const payerIdx = fams.indexOf(e.payer);
-      const partsHtml = fams.map(function (f, i) {
+      const sh = Calc.shares(e);
+      const weightsHtml = fams.map(function (f, i) {
         const p = Number(e.parts[i]) || 0;
-        if (p <= 0) return '';
-        return '<span class="chip" title="' + escapeHtml(f) + '"><span class="dot" style="' + dotStyle(trip, i) + '"></span>' + fmtNum(p) + '</span>';
+        const has = p > 0;
+        return '<span class="part-weight' + (has ? '' : ' empty') + '" style="grid-column:' + (i + 2) + ';grid-row:1" title="' + escapeHtml(f) + '">' +
+          (has ? fmtNum(p) : '–') +
+        '</span>';
+      }).join('');
+      const moneyHtml = fams.map(function (f, i) {
+        const p = Number(e.parts[i]) || 0;
+        const has = p > 0;
+        return '<span class="part-money' + (has ? '' : ' empty') + '" style="grid-column:' + (i + 2) + ';grid-row:2" title="' + escapeHtml(f) + '">' +
+          (has ? fmtMoney(sh[i], trip) : '–') +
+        '</span>';
       }).join('');
       html +=
         '<tr class="exp-row" data-id="' + e.id + '">' +
-          '<td class="exp-cell">' +
-            '<div class="exp-line exp-line1">' +
-              '<button type="button" class="exp-date" data-edit="' + e.id + '" title="Editar despesa">' + fmtDateShort(e.date) + '</button>' +
-              '<span class="exp-desc">' + escapeHtml(e.desc || '—') + '</span>' +
-            '</div>' +
-            '<div class="exp-line exp-line2">' +
-              '<span class="fam-avatar exp-payer" style="' + avatarStyle(trip, payerIdx) + '" title="' + escapeHtml(e.payer || '—') + '">' + escapeHtml(initials(e.payer) || '—') + '</span>' +
-              '<span class="parts-mini">' + (partsHtml || '<span class="chip">—</span>') + '</span>' +
-              '<span class="exp-value">' + fmtMoney(e.value, trip) + '</span>' +
-            '</div>' +
+          '<td class="exp-cell" style="--cols:' + (fams.length + 2) + '">' +
+            '<span class="fam-avatar exp-payer" style="' + avatarStyle(trip, payerIdx) + '" title="' + escapeHtml(e.payer || '—') + '">' + escapeHtml(initials(e.payer) || '—') + '</span>' +
+            weightsHtml +
+            '<button type="button" class="exp-date" data-edit="' + e.id + '" title="Editar despesa">' + fmtDateShort(e.date) + '</button>' +
+            moneyHtml +
+            '<span class="exp-value">' + fmtMoney(e.value, trip) + '</span>' +
+            '<div class="exp-desc">' + escapeHtml(e.desc || '—') + '</div>' +
           '</td>' +
         '</tr>';
     });
@@ -671,6 +678,7 @@
 
     $('#expenseModalTitle').textContent = exp ? 'Editar despesa' : 'Nova despesa';
     $('#expenseSubmitBtn').textContent = exp ? 'Salvar' : 'Adicionar';
+    $('#expenseDeleteBtn').hidden = !exp;
 
     $('#expDate').value = exp ? exp.date : new Date().toISOString().slice(0, 10);
     $('#expValue').value = exp ? String(exp.value).replace('.', ',') : '';
@@ -694,7 +702,7 @@
       row.innerHTML =
         '<span class="fam-avatar" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(f)) + '</span>' +
         '<span class="part-label">' + escapeHtml(f) + '</span>' +
-        '<input type="number" class="part-field" data-fam="' + i + '" min="0" step="any" value="' + fmtNum(val) + '" />' +
+        '<input type="text" inputmode="decimal" class="part-field" data-fam="' + i + '" value="' + fmtNum(val) + '" />' +
         '<span class="part-share" data-share="' + i + '"></span>';
       partsHost.appendChild(row);
     });
@@ -707,7 +715,7 @@
   function readExpenseForm() {
     const trip = currentTrip();
     const value = Calc.evalAmount($('#expValue').value);
-    const parts = $$('.part-field').map(function (inp) { return Number(inp.value) || 0; });
+    const parts = $$('.part-field').map(function (inp) { const v = Calc.evalAmount(inp.value); return isNaN(v) ? 0 : v; });
     return {
       date: $('#expDate').value,
       value: value,
@@ -728,7 +736,7 @@
       hint.textContent = '= ' + fmtMoney(value, trip);
     } else { hint.textContent = ''; }
 
-    const parts = $$('.part-field').map(function (inp) { return Number(inp.value) || 0; });
+    const parts = $$('.part-field').map(function (inp) { const v = Calc.evalAmount(inp.value); return isNaN(v) ? 0 : v; });
     const shares = Calc.shares({ value: isNaN(value) ? 0 : value, parts: parts });
     $$('.part-share').forEach(function (el, i) {
       el.textContent = shares[i] ? fmtMoney(shares[i], trip) : '';
@@ -931,6 +939,19 @@
     $('#expenseForm').addEventListener('submit', submitExpenseForm);
     $('#expValue').addEventListener('input', updateExpensePreview);
     $('#expParts').addEventListener('input', updateExpensePreview);
+    $('#expenseDeleteBtn').addEventListener('click', function () {
+      const trip = currentTrip();
+      const id = state.editingExpenseId;
+      if (!trip || !id) return;
+      const exp = trip.expenses.find(function (x) { return x.id === id; });
+      confirmAction('Excluir a despesa "' + (exp && exp.desc ? exp.desc : 'sem descrição') + '"?', function () {
+        Store.deleteExpense(trip.id, id);
+        toast('Despesa excluída.');
+        syncPush(Store.getTrip(trip.id));
+        closeModal($('#expenseModal'));
+        render();
+      });
+    });
 
     // Expense table actions
     $('#expensesTable').addEventListener('click', function (e) {

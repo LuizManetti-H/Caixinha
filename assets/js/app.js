@@ -132,6 +132,8 @@
     $('#tripView').hidden = onGate;
     $('#chipBar').hidden = onGate;
     $('#topbarActions').hidden = onGate;
+    document.body.classList.toggle('is-gate', onGate);
+    document.documentElement.classList.toggle('is-gate', onGate);
 
     if (onGate) {
       $('#brandTitle').textContent = 'Caixinha';
@@ -209,7 +211,23 @@
     if (state.gateError) { err.textContent = state.gateError; err.hidden = false; }
     else { err.hidden = true; }
     state.gateError = '';
+    updateSyncBadge();
     setTimeout(function () { if (gc._focus) gc._focus(); }, 60);
+  }
+
+  // Verde só quando o teste de sincronização passa (token válido com escrita).
+  function updateSyncBadge() {
+    const syncLink = $('.gate-sync-link');
+    if (!syncLink) return;
+    if (typeof Sync === 'undefined' || !Sync.isConfigured()) {
+      syncLink.classList.remove('is-synced');
+      return;
+    }
+    Sync.test().then(function (r) {
+      syncLink.classList.toggle('is-synced', !!(r && r.ok));
+    }).catch(function () {
+      syncLink.classList.remove('is-synced');
+    });
   }
 
   function submitGate(ev) {
@@ -756,30 +774,43 @@
     st.hidden = false;
   }
 
-  function testSync() {
-    Sync.setConfig(readSyncForm());
-    setSyncStatus('Testando…', '');
-    Sync.test().then(function (r) {
+  // Testa o token informado sem persistir um token inválido. Só mantém o token
+  // no armazenamento se o teste passar; caso contrário, restaura o anterior.
+  function verifySync(shouldSave) {
+    const token = readSyncForm().token;
+    if (!token) {
+      Sync.setConfig({ token: '' });
+      setSyncStatus('Não existe token registrado.', '');
+      updateSyncBadge();
+      return Promise.resolve();
+    }
+    const prevToken = Sync.getConfig().token || '';
+    Sync.setConfig({ token: token });
+    setSyncStatus('Testando conexão…', '');
+    return Sync.test().then(function (r) {
       setSyncStatus(r.message, r.ok ? 'ok' : 'error');
+      if (r.ok) {
+        if (shouldSave) {
+          toast('Sincronização salva.', 'success');
+          closeModal($('#syncModal'));
+          pullAndRefresh(false);
+        }
+      } else {
+        Sync.setConfig({ token: prevToken });
+      }
     }).catch(function (e) {
       setSyncStatus('Erro: ' + (e && e.message ? e.message : 'falha'), 'error');
+      Sync.setConfig({ token: prevToken });
     });
+  }
+
+  function testSync() {
+    verifySync(false);
   }
 
   function saveSync(ev) {
     if (ev) ev.preventDefault();
-    Sync.setConfig(readSyncForm());
-    setSyncStatus('Testando conexão…', '');
-    Sync.test().then(function (r) {
-      setSyncStatus(r.message, r.ok ? 'ok' : 'error');
-      if (r.ok) {
-        toast('Sincronização salva.', 'success');
-        closeModal($('#syncModal'));
-        pullAndRefresh(false);
-      }
-    }).catch(function (e) {
-      setSyncStatus('Erro: ' + (e && e.message ? e.message : 'falha'), 'error');
-    });
+    verifySync(true);
   }
 
   // ---------- Confirmação ----------
@@ -864,6 +895,10 @@
     // Sync modal
     $('#syncForm').addEventListener('submit', saveSync);
     $('#syncTestBtn').addEventListener('click', testSync);
+    $('#syncClearBtn').addEventListener('click', function () {
+      $('#syncToken').value = '';
+      $('#syncToken').focus();
+    });
 
     // Expense modal
     $('#addExpenseBtn').addEventListener('click', function () { openExpenseModal(null); });

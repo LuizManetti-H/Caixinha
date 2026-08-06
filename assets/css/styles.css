@@ -141,13 +141,13 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
 }
 .chip-bar-inner {
   max-width: 1140px; margin: 0 auto; padding: 12px 20px;
-  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  display: flex; gap: 5px; flex-wrap: wrap; align-items: center;
 }
 .fn-chip {
-  display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center; gap: 6px;
   border: 1px solid var(--border); background: var(--surface);
   color: var(--text-soft); border-radius: 999px;
-  padding: 8px 16px; font-family: inherit; font-size: 13.5px; font-weight: 600;
+  padding: 5px 10px; font-family: inherit; font-size: 13.5px; font-weight: 600;
   cursor: pointer; white-space: nowrap;
   transition: transform .06s ease, background .15s, border-color .15s, color .15s, box-shadow .15s;
 }
@@ -220,7 +220,17 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
 .empty-state p { color: var(--text-soft); max-width: 420px; margin: 0 auto 26px; }
 
 /* Gate (abrir por código) */
-.gate { display: grid; place-items: center; min-height: calc(100vh - 200px); padding: 30px 0; }
+.gate { display: grid; place-items: center; min-height: calc(100vh - 200px); padding: 10px 0 30px; }
+
+/* No celular, o gate ocupa a tela inteira sem rolagem. */
+@media (max-width: 640px) {
+  html.is-gate, body.is-gate { overflow: hidden; }
+  body.is-gate .container { padding-top: 10px; padding-bottom: 12px; }
+  body.is-gate .gate {
+    min-height: calc(100dvh - 89px);
+    padding: 10px 0 12px;
+  }
+}
 .gate-card {
   width: 100%; max-width: 440px; text-align: center;
   background: var(--surface); border: 1px solid var(--border);
@@ -232,6 +242,12 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
   display: grid; place-items: center; border-radius: 18px;
   background: var(--accent-soft); color: var(--accent);
 }
+.gate-head {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin-bottom: 8px;
+}
+.gate-head .gate-icon { margin: 0; }
+.gate-head h1 { margin: 0; }
 .gate-card h1 { font-size: 24px; margin: 0 0 6px; }
 .gate-sub { color: var(--text-soft); margin: 0 0 22px; font-size: 14.5px; }
 .gate-enter { width: 100%; justify-content: center; margin-top: 4px; }
@@ -254,6 +270,8 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
   border-radius: 8px; transition: color .15s, background .15s;
 }
 .gate-sync-link:hover { color: var(--accent); background: var(--accent-soft); }
+.gate-sync-link.is-synced { color: var(--green); }
+.gate-sync-link.is-synced:hover { color: var(--green); background: var(--green-soft); }
 
 /* Modal de sincronização */
 .sync-intro { color: var(--text-soft); font-size: 13.5px; line-height: 1.5; margin: 0 0 18px; }
@@ -264,6 +282,8 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
 }
 .sync-status.ok { background: var(--green-soft); color: var(--green); }
 .sync-status.error { background: var(--red-soft); color: var(--red); }
+#syncModal .modal-foot .btn { padding: 5px 8px; }
+#syncModal .modal-foot { justify-content: center; }
 
 /* Code input (N caixinhas de 1 caractere) */
 .code-input {

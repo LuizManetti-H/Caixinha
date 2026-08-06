@@ -116,7 +116,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
   border-bottom: 1px solid var(--border);
 }
 .topbar-inner {
-  max-width: 1140px; margin: 0 auto; padding: 5px;
+  max-width: 1140px; margin: 0 auto; padding: 5px 7.5px;
   display: flex; align-items: center; gap: 16px; justify-content: space-between;
 }
 .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
@@ -127,6 +127,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 }
+.brand-mark svg { width: 32px; height: 32px; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand-text strong { font-family: var(--font-display); font-size: 18px; }
 .brand-text small { color: var(--text-muted); font-size: 12px; }
@@ -141,14 +142,15 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
   border-bottom: 1px solid var(--border);
 }
 .chip-bar-inner {
-  max-width: 1140px; margin: 0 auto; padding: 12px 20px;
+  max-width: 1140px; margin: 0 auto; height: 30px; padding: 0 20px;
   display: flex; gap: 5px; flex-wrap: wrap; align-items: center;
 }
 .fn-chip {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  flex: 1 1 0; min-width: 0;
   border: 1px solid var(--border); background: var(--surface);
   color: var(--text-soft); border-radius: 999px;
-  padding: 5px 10px; font-family: inherit; font-size: 13.5px; font-weight: 600;
+  height: 22px; padding: 0 10px; font-family: inherit; font-size: 13.5px; font-weight: 600;
   cursor: pointer; white-space: nowrap;
   transition: transform .06s ease, background .15s, border-color .15s, color .15s, box-shadow .15s;
 }
@@ -213,7 +215,7 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
 .menu-sep { height: 1px; background: var(--border); margin: 5px 4px; }
 
 /* Layout */
-.container { max-width: 1140px; margin: 0 auto; padding: 5px 5px 80px; }
+.container { max-width: 1140px; margin: 0 auto; padding: 15px 7.5px 80px; }
 
 .empty-state { text-align: center; padding: 90px 20px; }
 .empty-illustration { font-size: 66px; margin-bottom: 8px; }
@@ -223,8 +225,8 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
 /* Gate (abrir por código) */
 .gate { display: grid; place-items: center; min-height: calc(100vh - 200px); padding: 10px 0 30px; }
 
-/* Página inicial: box branco a 5px das laterais e do topo. */
-body.is-gate .container { padding: 5px 5px 12px; }
+/* Página inicial: box branco a 7.5px das laterais e 15px do topo. */
+body.is-gate .container { padding: 15px 7.5px 12px; }
 body.is-gate .gate { align-items: start; min-height: 0; padding: 0; }
 
 /* No celular, o gate ocupa a tela inteira sem rolagem. */
@@ -244,8 +246,8 @@ body.is-gate .gate { align-items: start; min-height: 0; padding: 0; }
   background: var(--accent-soft); color: var(--accent);
 }
 .gate-head {
-  display: flex; align-items: center; justify-content: center;
-  gap: 14px; margin-bottom: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 8px;
 }
 .gate-head .gate-icon { margin: 0; }
 .gate-head h1 { margin: 0; }
@@ -357,7 +359,7 @@ body.is-gate .gate { align-items: start; min-height: 0; padding: 0; }
 .badge.zero { background: var(--bg-soft); color: var(--text-muted); }
 
 /* Box consolidado (visão dos 3 juntos) */
-.consolidated-card { margin-bottom: 10px; padding: 5px; }
+.consolidated-card { margin-bottom: 15px; padding: 7.5px; }
 .cons-grid {
   display: grid;
   grid-template-columns: auto repeat(var(--cons-cols, 3), 1fr);
@@ -376,9 +378,10 @@ body.is-gate .gate { align-items: start; min-height: 0; padding: 0; }
 /* Panels */
 .panel {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 22px; margin-bottom: 10px; box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg); padding: 22px; margin-bottom: 15px; box-shadow: var(--shadow-sm);
 }
-.panel-balance { padding: 5px; border-radius: var(--radius); }
+.panel[data-view="despesas"] { padding: 7.5px; border-radius: var(--radius); }
+.panel-balance { padding: 7.5px; border-radius: var(--radius); }
 .panel-balance .panel-head { flex-direction: column; align-items: flex-start; gap: 0; }
 .panel-balance .panel-sub { margin-top: -5px; }
 .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -390,7 +393,7 @@ body.is-gate .gate { align-items: start; min-height: 0; padding: 0; }
 .search-box svg { position: absolute; left: 12px; color: var(--text-muted); pointer-events: none; }
 .search-box input {
   background: var(--bg-soft); border: 1px solid var(--border); color: var(--text);
-  border-radius: var(--radius-sm); padding: 9px 12px 9px 34px; font: inherit; font-size: 14px; width: 200px;
+  border-radius: var(--radius-sm); padding: 2px 12px 2px 34px; font: inherit; font-size: 10px; width: 200px; height: 25px;
   transition: border-color .15s, box-shadow .15s, width .2s;
 }
 .search-box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); width: 240px; }
@@ -445,15 +448,18 @@ table { border-collapse: collapse; width: 100%; }
   .mtx-av { width: 24px; height: 24px; font-size: 10.5px; border-radius: 7px; }
 }
 
-.expenses-table th, .expenses-table td { padding: 12px 12px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border); }
-.expenses-table thead th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); position: sticky; top: 0; }
+.expenses-table td { padding: 10px 5px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border); }
 .expenses-table tbody tr { transition: background .12s; }
 .expenses-table tbody tr:hover { background: var(--bg-soft); }
-.expenses-table .num { text-align: right; font-variant-numeric: tabular-nums; }
-.expenses-table .col-value { font-weight: 700; }
-.expenses-table .desc-cell { max-width: 320px; }
-.expenses-table .desc-cell .desc-text { display: block; }
 .expenses-table .parts-mini { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.exp-cell { position: relative; }
+.exp-line { display: flex; align-items: center; gap: 10px; }
+.exp-line2 { margin-top: 6px; }
+.exp-payer { width: 26px; height: 26px; font-size: 12px; border-radius: 8px; flex: none; }
+.exp-date { font-size: 12px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; font-family: inherit; border: 1px solid var(--border); background: var(--bg-soft); border-radius: var(--radius-sm); padding: 3px 8px; cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+.exp-date:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.exp-desc { font-weight: 600; font-size: 14px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.exp-value { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .chip {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--bg-soft); border: 1px solid var(--border);

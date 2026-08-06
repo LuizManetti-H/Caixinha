@@ -64,6 +64,16 @@
     if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
     return iso;
   }
+  function fmtDateShort(iso) {
+    if (!iso) return '';
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const parts = String(iso).split('-');
+    if (parts.length === 3) {
+      const m = parseInt(parts[1], 10);
+      return parts[2] + '.' + (MONTHS[m - 1] || parts[1]);
+    }
+    return iso;
+  }
   function escapeHtml(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -468,12 +478,10 @@
     }
     $('#expensesEmpty').hidden = true;
 
-    let html = '<thead><tr>' +
-      '<th>Data</th><th>Descrição</th><th>Pagante</th>' +
-      '<th>Partes</th><th class="num">Valor</th><th></th></tr></thead><tbody>';
+    let html = '<tbody>';
 
     if (list.length === 0) {
-      html += '<tr><td colspan="6" class="table-empty">Nenhuma despesa encontrada para "' + escapeHtml(state.search) + '".</td></tr>';
+      html += '<tr><td class="table-empty">Nenhuma despesa encontrada para "' + escapeHtml(state.search) + '".</td></tr>';
     }
 
     list.forEach(function (e) {
@@ -484,20 +492,18 @@
         return '<span class="chip" title="' + escapeHtml(f) + '"><span class="dot" style="' + dotStyle(trip, i) + '"></span>' + fmtNum(p) + '</span>';
       }).join('');
       html +=
-        '<tr data-id="' + e.id + '">' +
-          '<td>' + fmtDate(e.date) + '</td>' +
-          '<td class="desc-cell"><span class="desc-text">' + escapeHtml(e.desc || '—') + '</span></td>' +
-          '<td><span class="payer-tag"><span class="dot" style="' + dotStyle(trip, payerIdx) + '"></span>' + escapeHtml(e.payer || '—') + '</span></td>' +
-          '<td><span class="parts-mini">' + (partsHtml || '<span class="chip">—</span>') + '</span></td>' +
-          '<td class="num col-value">' + fmtMoney(e.value, trip) + '</td>' +
-          '<td class="num"><span class="row-actions">' +
-            '<button class="icon-btn" data-edit="' + e.id + '" title="Editar">' +
-              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' +
-            '</button>' +
-            '<button class="icon-btn danger" data-del="' + e.id + '" title="Excluir">' +
-              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/></svg>' +
-            '</button>' +
-          '</span></td>' +
+        '<tr class="exp-row" data-id="' + e.id + '">' +
+          '<td class="exp-cell">' +
+            '<div class="exp-line exp-line1">' +
+              '<button type="button" class="exp-date" data-edit="' + e.id + '" title="Editar despesa">' + fmtDateShort(e.date) + '</button>' +
+              '<span class="exp-desc">' + escapeHtml(e.desc || '—') + '</span>' +
+            '</div>' +
+            '<div class="exp-line exp-line2">' +
+              '<span class="fam-avatar exp-payer" style="' + avatarStyle(trip, payerIdx) + '" title="' + escapeHtml(e.payer || '—') + '">' + escapeHtml(initials(e.payer) || '—') + '</span>' +
+              '<span class="parts-mini">' + (partsHtml || '<span class="chip">—</span>') + '</span>' +
+              '<span class="exp-value">' + fmtMoney(e.value, trip) + '</span>' +
+            '</div>' +
+          '</td>' +
         '</tr>';
     });
     html += '</tbody>';

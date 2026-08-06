@@ -244,35 +244,12 @@
       </div>
       <form id="syncForm" class="modal-body">
         <p class="sync-intro">
-          Os dados ficam no <strong>GitHub</strong>. Para ver as edições em outro
-          aparelho, todos usam o mesmo repositório. Para <strong>gravar</strong>
-          alterações, cole um token pessoal — ele fica só neste navegador.
+          Para <strong>gravar</strong> alterações, cole o token do site Caixinha.
         </p>
-        <div class="field-row">
-          <div class="field">
-            <label for="syncOwner">Usuário/organização</label>
-            <input type="text" id="syncOwner" autocomplete="off" spellcheck="false" placeholder="Ex.: LuizManetti-H" />
-          </div>
-          <div class="field">
-            <label for="syncRepo">Repositório</label>
-            <input type="text" id="syncRepo" autocomplete="off" spellcheck="false" placeholder="Ex.: caixinha" />
-          </div>
-        </div>
         <div class="field">
-          <label for="syncBranch">Branch</label>
-          <input type="text" id="syncBranch" autocomplete="off" spellcheck="false" placeholder="main" />
-        </div>
-        <div class="field">
-          <label for="syncToken">Token do GitHub <span class="hint">(só para gravar; fica neste aparelho)</span></label>
           <input type="password" id="syncToken" autocomplete="off" spellcheck="false" placeholder="github_pat_… ou ghp_…" />
-          <label class="sync-show"><input type="checkbox" id="syncShowToken" /> Mostrar token</label>
         </div>
         <p id="syncStatus" class="sync-status" hidden></p>
-        <p class="sync-help">
-          <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Como criar um token →</a>
-          Crie um <em>Fine-grained token</em>, dê acesso só a este repositório e
-          marque <strong>Contents: Read and write</strong>.
-        </p>
         <div class="modal-foot">
           <button type="button" class="btn btn-ghost" id="syncTestBtn">Testar conexão</button>
           <button type="submit" class="btn btn-primary" id="syncSaveBtn">Salvar</button>

@@ -736,13 +736,8 @@
   // ---------- Modal de sincronização ----------
   function openSyncModal() {
     const cfg = Sync.getConfig();
-    $('#syncOwner').value = cfg.owner || '';
-    $('#syncRepo').value = cfg.repo || '';
-    $('#syncBranch').value = cfg.branch || 'main';
     $('#syncToken').value = cfg.token || '';
     $('#syncToken').type = 'password';
-    const show = $('#syncShowToken');
-    if (show) show.checked = false;
     const st = $('#syncStatus');
     st.hidden = true; st.className = 'sync-status';
     $('#syncModal').hidden = false;
@@ -750,9 +745,6 @@
 
   function readSyncForm() {
     return {
-      owner: $('#syncOwner').value.trim(),
-      repo: $('#syncRepo').value.trim(),
-      branch: $('#syncBranch').value.trim() || 'main',
       token: $('#syncToken').value.trim()
     };
   }
@@ -872,9 +864,6 @@
     // Sync modal
     $('#syncForm').addEventListener('submit', saveSync);
     $('#syncTestBtn').addEventListener('click', testSync);
-    $('#syncShowToken').addEventListener('change', function (e) {
-      $('#syncToken').type = e.target.checked ? 'text' : 'password';
-    });
 
     // Expense modal
     $('#addExpenseBtn').addEventListener('click', function () { openExpenseModal(null); });

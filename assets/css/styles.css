@@ -257,14 +257,6 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.02em; }
 
 /* Modal de sincronização */
 .sync-intro { color: var(--text-soft); font-size: 13.5px; line-height: 1.5; margin: 0 0 18px; }
-.sync-help { color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin: 14px 0 0; }
-.sync-help a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.sync-help a:hover { text-decoration: underline; }
-.sync-show {
-  display: inline-flex; align-items: center; gap: 6px;
-  margin-top: 8px; font-size: 12.5px; color: var(--text-muted); cursor: pointer;
-}
-.sync-show input { width: auto; }
 .sync-status {
   margin: 12px 0 0; padding: 10px 12px; border-radius: 10px;
   font-size: 13px; font-weight: 600;

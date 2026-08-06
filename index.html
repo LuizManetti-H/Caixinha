@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caixinha · Finanças de Viagem</title>
+  <meta name="description" content="Controle de despesas compartilhadas em viagens entre famílias." />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div id="app-loading" class="app-loading">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.4-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/>
+            <path d="M2 9v1c0 1.1.9 2 2 2h1"/>
+            <path d="M16 11h0"/>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <strong id="brandTitle">Caixinha</strong>
+          <small id="brandSub">Finanças de viagem</small>
+        </div>
+      </div>
+
+      <div class="topbar-actions" id="topbarActions">
+        <div class="menu">
+          <button id="menuBtn" class="btn btn-ghost btn-icon" type="button" aria-haspopup="true" aria-expanded="false" title="Mais opções">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          </button>
+          <div id="menuDropdown" class="menu-dropdown" role="menu" hidden>
+            <button class="menu-item" data-action="edit-trip" role="menuitem">Editar caixinha</button>
+            <div class="menu-sep"></div>
+            <button class="menu-item" data-action="toggle-theme" role="menuitem">Alternar tema</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="chip-bar" id="chipBar" aria-label="Funções rápidas">
+    <div class="chip-bar-inner">
+      <button type="button" class="fn-chip" data-view="resumo">Resumo</button>
+      <button type="button" class="fn-chip" data-view="despesas">Despesas</button>
+      <button type="button" class="fn-chip" data-fn="3">Função 3</button>
+    </div>
+  </nav>
+
+  <main class="container" id="mainContent">
+    <!-- Gate: abrir por código ou criar nova caixinha -->
+    <section id="gateView" class="gate" hidden>
+      <div class="gate-card">
+        <div class="gate-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="10" width="18" height="11" rx="2"/>
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+          </svg>
+        </div>
+        <h1>Abrir Caixinha</h1>
+        <p class="gate-sub">Digite o código da sua caixinha para acessá-la.</p>
+        <form id="gateForm">
+          <div class="code-input" id="gateCode" data-len="10" aria-label="Código da caixinha"></div>
+          <p class="gate-error" id="gateError" hidden></p>
+          <button type="submit" class="btn btn-primary btn-lg gate-enter">Entrar</button>
+        </form>
+        <div class="gate-divider"><span>ou</span></div>
+        <button type="button" class="btn btn-ghost btn-lg gate-new" data-action="new-trip">
+          <span>Nova Caixinha</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Trip view -->
+    <section id="tripView" hidden>
+      <!-- Summary cards -->
+      <div class="cards-grid" id="summaryCards" data-view="resumo"></div>
+
+      <!-- Balance -->
+      <section class="panel" data-view="resumo">
+        <div class="panel-head">
+          <h2>Balanço de contas</h2>
+          <span class="panel-sub">Quem deve para quem, acertando entre pares</span>
+        </div>
+        <div id="balanceList" class="balance-list"></div>
+      </section>
+
+      <!-- Financial summary matrix -->
+      <section class="panel" data-view="resumo">
+        <div class="panel-head">
+          <h2>Resumo financeiro</h2>
+          <span class="panel-sub">Quanto cada pagante cobriu de cada família</span>
+        </div>
+        <div class="table-wrap">
+          <table class="matrix-table" id="summaryMatrix"></table>
+        </div>
+      </section>
+
+      <!-- Expenses -->
+      <section class="panel" data-view="despesas">
+        <div class="panel-head">
+          <h2>Despesas</h2>
+          <div class="panel-head-actions">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+              <input type="search" id="expenseSearch" placeholder="Buscar despesa..." />
+            </div>
+            <button id="addExpenseBtn" class="btn btn-primary" type="button">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Nova despesa</span>
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="expenses-table" id="expensesTable"></table>
+        </div>
+        <div id="expensesEmpty" class="table-empty" hidden>Nenhuma despesa registrada. Adicione a primeira!</div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Trip modal -->
+  <div class="modal-overlay" id="tripModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tripModalTitle">
+      <div class="modal-head">
+        <h2 id="tripModalTitle">Nova Caixinha</h2>
+        <button class="btn btn-ghost btn-icon modal-close" type="button" data-close>✕</button>
+      </div>
+      <form id="tripForm" class="modal-body">
+        <div class="field">
+          <label for="tripName">Nome da caixinha</label>
+          <input type="text" id="tripName" required placeholder="Ex.: FIFA World Cup 2026" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Código da caixinha <span class="hint">(até 10 caracteres, para abrir depois)</span></label>
+          <div class="code-input" id="tripCode" data-len="10" aria-label="Código da caixinha"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="familyCount">Quantas famílias?</label>
+            <input type="number" id="familyCount" min="2" max="12" step="1" value="3" required />
+          </div>
+          <div class="field">
+            <label for="currencyPreset">Moeda</label>
+            <select id="currencyPreset">
+              <option value="USD|$">Dólar ($)</option>
+              <option value="BRL|R$">Real (R$)</option>
+              <option value="EUR|€">Euro (€)</option>
+              <option value="GBP|£">Libra (£)</option>
+              <option value="ARS|$">Peso argentino ($)</option>
+              <option value="__custom__">Outra…</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row" id="customCurrencyRow" hidden>
+          <div class="field">
+            <label for="currencyCode">Código</label>
+            <input type="text" id="currencyCode" placeholder="Ex.: JPY" maxlength="6" />
+          </div>
+          <div class="field">
+            <label for="currencySymbol">Símbolo</label>
+            <input type="text" id="currencySymbol" placeholder="Ex.: ¥" maxlength="4" />
+          </div>
+        </div>
+        <div class="field">
+          <div class="fam-head">
+            <label class="fam-head-label">Nomes das famílias</label>
+            <div class="fam-colors-head">
+              <span>Borda</span>
+              <span>Interior</span>
+              <span>Letra</span>
+            </div>
+          </div>
+          <div id="familyNames" class="family-names"></div>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="tripSubmitBtn">Criar viagem</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Expense modal -->
+  <div class="modal-overlay" id="expenseModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+      <div class="modal-head">
+        <h2 id="expenseModalTitle">Nova despesa</h2>
+        <button class="btn btn-ghost btn-icon modal-close" type="button" data-close>✕</button>
+      </div>
+      <form id="expenseForm" class="modal-body">
+        <div class="field-row">
+          <div class="field">
+            <label for="expDate">Data</label>
+            <input type="date" id="expDate" required />
+          </div>
+          <div class="field">
+            <label for="expValue">Valor <span id="expValueHint" class="hint"></span></label>
+            <input type="text" id="expValue" inputmode="decimal" placeholder="0,00 ou 58+75" required autocomplete="off" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="expPayer">Quem pagou</label>
+          <select id="expPayer" required></select>
+        </div>
+        <div class="field">
+          <label>Partes por família <span class="hint">(quantas partes cada família consome)</span></label>
+          <div id="expParts" class="parts-grid"></div>
+        </div>
+        <div class="field">
+          <label for="expDesc">Descrição</label>
+          <input type="text" id="expDesc" placeholder="Ex.: Jantar no restaurante" autocomplete="off" />
+        </div>
+        <div id="expPreview" class="exp-preview"></div>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="expenseSubmitBtn">Adicionar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm modal -->
+  <div class="modal-overlay" id="confirmModal" hidden>
+    <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal-head">
+        <h2 id="confirmTitle">Confirmar</h2>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage"></p>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmOkBtn">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastHost" class="toast-host" aria-live="polite"></div>
+
+  <script src="assets/js/calc.js"></script>
+  <script src="data/seeds.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

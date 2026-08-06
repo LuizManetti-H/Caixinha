@@ -1,0 +1,845 @@
+/* Caixinha · Lógica da interface */
+(function () {
+  'use strict';
+
+  const $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
+  const $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
+
+  const FAM_COLORS = ['#6d5efc', '#12a969', '#f5a524', '#e5484d', '#0ea5e9', '#d946ef',
+    '#14b8a6', '#f97316', '#8b5cf6', '#ec4899', '#22c55e', '#eab308'];
+
+  const state = {
+    tripId: null,
+    editingExpenseId: null,
+    confirmCb: null,
+    search: '',
+    view: 'resumo',
+    route: 'gate',
+    gatePrefill: '',
+    gateError: ''
+  };
+
+  // ---------- Helpers ----------
+  function famColor(i) { return FAM_COLORS[i % FAM_COLORS.length]; }
+
+  // Cores do "box" de cada família (borda, interior, letra), com defaults por índice.
+  function famVisual(trip, i) {
+    const c = trip && trip.colors && trip.colors[i];
+    if (c && (c.bg || c.fg || c.border)) {
+      const bg = c.bg || '#ffffff';
+      return { bg: bg, fg: c.fg || '#ffffff', border: c.border || bg };
+    }
+    const base = famColor(i);
+    return { bg: base, fg: '#ffffff', border: base };
+  }
+  function avatarStyle(trip, i) {
+    const v = famVisual(trip, i);
+    return 'background:' + v.bg + ';color:' + v.fg + ';border:1.5px solid ' + v.border;
+  }
+  function dotStyle(trip, i) {
+    if (i < 0) return 'background:#999;border-color:#999';
+    const v = famVisual(trip, i);
+    return 'background:' + v.bg + ';border-color:' + v.border;
+  }
+  function initials(name) {
+    const parts = String(name).trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '' ).toUpperCase() + ((parts[1] || '')[0] || '').toUpperCase();
+  }
+
+  function currentTrip() { return state.tripId ? Store.getTrip(state.tripId) : null; }
+
+  function fmtMoney(n, trip) {
+    const sym = (trip && trip.currency && trip.currency.symbol) || '$';
+    const neg = n < 0;
+    const v = Math.abs(Number(n) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (neg ? '-' : '') + sym + ' ' + v;
+  }
+  function fmtNum(n) {
+    const v = Number(n) || 0;
+    return Number.isInteger(v) ? String(v) : v.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const parts = String(iso).split('-');
+    if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
+    return iso;
+  }
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function toast(msg, type) {
+    const host = $('#toastHost');
+    const el = document.createElement('div');
+    el.className = 'toast' + (type ? ' ' + type : '');
+    el.textContent = msg;
+    host.appendChild(el);
+    setTimeout(function () {
+      el.style.transition = 'opacity .25s, transform .25s';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(10px)';
+      setTimeout(function () { el.remove(); }, 260);
+    }, 2600);
+  }
+
+  // ---------- Tema ----------
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    Store.setTheme(t);
+  }
+  function toggleTheme() {
+    applyTheme(Store.getTheme() === 'dark' ? 'light' : 'dark');
+  }
+
+  // ---------- Render principal ----------
+  function render() {
+    const trip = currentTrip();
+    const onGate = state.route !== 'trip' || !trip;
+
+    $('#gateView').hidden = !onGate;
+    $('#tripView').hidden = onGate;
+    $('#chipBar').hidden = onGate;
+    $('#topbarActions').hidden = onGate;
+
+    if (onGate) {
+      $('#brandTitle').textContent = 'Caixinha';
+      $('#brandSub').textContent = 'Finanças de viagem';
+      renderGate();
+      return;
+    }
+
+    const data = Calc.compute(trip);
+    renderTripHeader(trip, data);
+    renderSummaryCards(trip, data);
+    renderBalances(trip, data);
+    renderMatrix(trip, data);
+    renderExpenses(trip);
+    applyView();
+  }
+
+  // ---------- Entrada por código (gate) e roteamento por URL (#CODIGO) ----------
+  function getHashCode() {
+    return Store.sanitizeCode((location.hash || '').replace(/^#/, ''));
+  }
+
+  function setHash(code) {
+    const c = Store.sanitizeCode(code);
+    if (c) {
+      if (getHashCode() !== c) location.hash = c;
+    } else if (location.hash) {
+      try {
+        history.replaceState(null, '', location.pathname + location.search);
+      } catch (e) {
+        location.hash = '';
+      }
+    }
+  }
+
+  function handleRoute() {
+    const code = getHashCode();
+    if (!code) { showGate(); return; }
+    const trip = Store.getTripByCode(code);
+    if (trip) {
+      state.tripId = trip.id;
+      Store.setCurrent(trip.id);
+      state.route = 'trip';
+      state.view = 'resumo';
+      render();
+    } else {
+      showGate(code, 'Nenhuma caixinha encontrada com o código "' + code + '".');
+    }
+  }
+
+  function openTrip(tripId) {
+    const trip = Store.getTrip(tripId);
+    if (!trip) { showGate(); return; }
+    state.tripId = tripId;
+    Store.setCurrent(tripId);
+    state.route = 'trip';
+    state.view = 'resumo';
+    setHash(trip.code || '');
+    render();
+  }
+
+  function showGate(prefillCode, errorMsg) {
+    state.route = 'gate';
+    state.tripId = null;
+    state.gatePrefill = prefillCode || '';
+    state.gateError = errorMsg || '';
+    setHash('');
+    render();
+  }
+
+  function renderGate() {
+    const gc = $('#gateCode');
+    if (gc._setCode) gc._setCode(state.gatePrefill || '');
+    const err = $('#gateError');
+    if (state.gateError) { err.textContent = state.gateError; err.hidden = false; }
+    else { err.hidden = true; }
+    state.gateError = '';
+    setTimeout(function () { if (gc._focus) gc._focus(); }, 60);
+  }
+
+  function submitGate(ev) {
+    ev.preventDefault();
+    const code = $('#gateCode')._getCode();
+    const err = $('#gateError');
+    if (!code) { err.textContent = 'Digite o código da caixinha.'; err.hidden = false; return; }
+    const trip = Store.getTripByCode(code);
+    if (!trip) {
+      err.textContent = 'Nenhuma caixinha encontrada com o código "' + code + '".';
+      err.hidden = false;
+      return;
+    }
+    openTrip(trip.id);
+  }
+
+  // Componente de código: N caixinhas de 1 caractere.
+  function setupCodeInput(container) {
+    const len = parseInt(container.getAttribute('data-len'), 10) || 10;
+    container.innerHTML = '';
+    const boxes = [];
+    function clean(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+    for (let i = 0; i < len; i++) {
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'code-box';
+      inp.maxLength = 1;
+      inp.autocomplete = 'off';
+      inp.setAttribute('aria-label', 'Caractere ' + (i + 1));
+      container.appendChild(inp);
+      boxes.push(inp);
+    }
+    boxes.forEach(function (inp, i) {
+      inp.addEventListener('input', function () {
+        inp.value = clean(inp.value).slice(-1);
+        if (inp.value && i < len - 1) boxes[i + 1].focus();
+      });
+      inp.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !inp.value && i > 0) {
+          e.preventDefault();
+          boxes[i - 1].value = '';
+          boxes[i - 1].focus();
+        } else if (e.key === 'ArrowLeft' && i > 0) {
+          e.preventDefault(); boxes[i - 1].focus();
+        } else if (e.key === 'ArrowRight' && i < len - 1) {
+          e.preventDefault(); boxes[i + 1].focus();
+        }
+      });
+      inp.addEventListener('paste', function (e) {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text');
+        const chars = clean(text).split('');
+        for (let k = 0; k < chars.length && i + k < len; k++) boxes[i + k].value = chars[k];
+        boxes[Math.min(i + chars.length, len - 1)].focus();
+      });
+    });
+    container._getCode = function () {
+      return boxes.map(function (b) { return b.value; }).join('');
+    };
+    container._setCode = function (code) {
+      const c = clean(code);
+      boxes.forEach(function (b, k) { b.value = c[k] || ''; });
+    };
+    container._focus = function () { boxes[0].focus(); };
+    container._clear = function () { boxes.forEach(function (b) { b.value = ''; }); };
+  }
+
+  function applyView() {
+    $$('#tripView [data-view]').forEach(function (el) {
+      el.hidden = el.getAttribute('data-view') !== state.view;
+    });
+    $$('.fn-chip').forEach(function (chip) {
+      chip.classList.toggle('active', chip.getAttribute('data-view') === state.view);
+    });
+  }
+
+  function setView(view) {
+    state.view = view;
+    applyView();
+  }
+
+  function renderTripHeader(trip, data) {
+    const moeda = currencyLabel(trip.currency);
+    $('#brandTitle').textContent = 'Caixinha - ' + trip.name;
+    $('#brandSub').textContent =
+      'Finanças de viagem · ' +
+      trip.families.length + ' famílias · ' +
+      data.count + ' despesa' + (data.count === 1 ? '' : 's') + ' · ' +
+      'Moeda: ' + moeda;
+  }
+
+  // Moeda no formato "Nome (símbolo)", ex.: "Dólar ($)".
+  const CURRENCY_NAMES = {
+    USD: 'Dólar', BRL: 'Real', EUR: 'Euro', GBP: 'Libra',
+    ARS: 'Peso argentino', JPY: 'Iene', CAD: 'Dólar canadense',
+    AUD: 'Dólar australiano', CHF: 'Franco suíço', MXN: 'Peso mexicano',
+    CLP: 'Peso chileno', UYU: 'Peso uruguaio', COP: 'Peso colombiano'
+  };
+  function currencyLabel(cur) {
+    cur = cur || {};
+    const name = CURRENCY_NAMES[(cur.code || '').toUpperCase()] || cur.code || 'Moeda';
+    return name + ' (' + (cur.symbol || '') + ')';
+  }
+
+  function renderSummaryCards(trip, data) {
+    const host = $('#summaryCards');
+    host.innerHTML = '';
+
+    trip.families.forEach(function (fam, i) {
+      const paid = data.totals.paid[i];
+      const consumed = data.totals.consumed[i];
+      const net = data.totals.net[i];
+      const badgeCls = Math.abs(net) < 0.005 ? 'zero' : (net > 0 ? 'pos' : 'neg');
+      const badgeTxt = Math.abs(net) < 0.005 ? 'quitado' : (net > 0 ? 'a receber ' + fmtMoney(net, trip) : 'a pagar ' + fmtMoney(-net, trip));
+      const card = document.createElement('div');
+      card.className = 'card family-card';
+      card.innerHTML =
+        '<div class="card-head">' +
+          '<span class="fam-avatar" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(fam)) + '</span>' +
+          '<span class="fam-name">' + escapeHtml(fam) + '</span>' +
+        '</div>' +
+        '<div class="stat-row"><span>Pagou</span><span>' + fmtMoney(paid, trip) + '</span></div>' +
+        '<div class="stat-row"><span>Consumiu</span><span>' + fmtMoney(consumed, trip) + '</span></div>' +
+        '<div class="family-net">' +
+          '<span class="net-label">Saldo</span>' +
+          '<span class="badge ' + badgeCls + '">' + badgeTxt + '</span>' +
+        '</div>';
+      host.appendChild(card);
+    });
+  }
+
+  function renderBalances(trip, data) {
+    const host = $('#balanceList');
+    host.innerHTML = '';
+    const fams = trip.families;
+    if (data.balances.length === 0) {
+      host.innerHTML = '<div class="table-empty" style="grid-column:1/-1">Adicione despesas para ver o balanço.</div>';
+      return;
+    }
+    data.balances.forEach(function (b) {
+      const item = document.createElement('div');
+      if (b.settled) {
+        item.className = 'balance-item settled';
+        item.innerHTML =
+          '<div class="balance-flow">' +
+            '<span class="who">' + escapeHtml(fams[b.a]) + '</span>' +
+            '<span class="balance-arrow">↔</span>' +
+            '<span class="who">' + escapeHtml(fams[b.b]) + '</span>' +
+          '</div>' +
+          '<span class="balance-amount settled">quitado</span>';
+      } else {
+        item.className = 'balance-item';
+        item.innerHTML =
+          '<div>' +
+            '<div class="balance-flow">' +
+              '<span class="who">' + escapeHtml(fams[b.from]) + '</span>' +
+              '<span class="balance-arrow" title="deve a">→</span>' +
+              '<span class="who">' + escapeHtml(fams[b.to]) + '</span>' +
+            '</div>' +
+            '<span class="balance-detail">' + escapeHtml(fams[b.from]) + ' deve a ' + escapeHtml(fams[b.to]) + '</span>' +
+          '</div>' +
+          '<span class="balance-amount">' + fmtMoney(b.amount, trip) + '</span>';
+      }
+      host.appendChild(item);
+    });
+  }
+
+  function renderMatrix(trip, data) {
+    const fams = trip.families;
+    const M = data.matrix;
+    const t = data.totals;
+    const table = $('#summaryMatrix');
+    let html = '<thead><tr><th>Pagante \\ Família</th>';
+    fams.forEach(function (f) { html += '<th class="fam-col"><span class="mnum">' + escapeHtml(f) + '</span></th>'; });
+    html += '<th class="total-col">Total pago</th></tr></thead><tbody>';
+    fams.forEach(function (payer, i) {
+      html += '<tr><td class="row-label">' + escapeHtml(payer) + '</td>';
+      fams.forEach(function (_, j) {
+        const cls = i === j ? 'diag' : '';
+        html += '<td class="fam-col ' + cls + '"><span class="mnum">' + fmtMoney(M[i][j], trip) + '</span></td>';
+      });
+      html += '<td class="total-col">' + fmtMoney(t.paid[i], trip) + '</td></tr>';
+    });
+    html += '<tr class="total-row"><td>Total consumido</td>';
+    fams.forEach(function (_, j) { html += '<td class="fam-col"><span class="mnum">' + fmtMoney(t.consumed[j], trip) + '</span></td>'; });
+    html += '<td>' + fmtMoney(t.grand, trip) + '</td></tr>';
+    html += '</tbody>';
+    table.innerHTML = html;
+
+    // Iguala a largura do bloco numérico de cada coluna ao maior valor (o total),
+    // para o total ficar centralizado e os demais alinharem na borda direita dele.
+    const numSpans = $$('td.fam-col .mnum', table);
+    let maxW = 0;
+    numSpans.forEach(function (s) { s.style.minWidth = '0'; });
+    numSpans.forEach(function (s) { maxW = Math.max(maxW, s.getBoundingClientRect().width); });
+    maxW = Math.ceil(maxW);
+    $$('.fam-col .mnum', table).forEach(function (s) { s.style.minWidth = maxW + 'px'; });
+  }
+
+  function renderExpenses(trip) {
+    const table = $('#expensesTable');
+    const fams = trip.families;
+    const q = state.search.trim().toLowerCase();
+
+    let list = trip.expenses.slice();
+    if (q) {
+      list = list.filter(function (e) {
+        return (e.desc || '').toLowerCase().indexOf(q) !== -1 ||
+               (e.payer || '').toLowerCase().indexOf(q) !== -1;
+      });
+    }
+    list.sort(function (a, b) {
+      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+      // Mesma data: mais recém-adicionada primeiro.
+      return trip.expenses.indexOf(b) - trip.expenses.indexOf(a);
+    });
+
+    if (trip.expenses.length === 0) {
+      table.innerHTML = '';
+      $('#expensesEmpty').hidden = false;
+      return;
+    }
+    $('#expensesEmpty').hidden = true;
+
+    let html = '<thead><tr>' +
+      '<th>Data</th><th>Descrição</th><th>Pagante</th>' +
+      '<th>Partes</th><th class="num">Valor</th><th></th></tr></thead><tbody>';
+
+    if (list.length === 0) {
+      html += '<tr><td colspan="6" class="table-empty">Nenhuma despesa encontrada para "' + escapeHtml(state.search) + '".</td></tr>';
+    }
+
+    list.forEach(function (e) {
+      const payerIdx = fams.indexOf(e.payer);
+      const partsHtml = fams.map(function (f, i) {
+        const p = Number(e.parts[i]) || 0;
+        if (p <= 0) return '';
+        return '<span class="chip" title="' + escapeHtml(f) + '"><span class="dot" style="' + dotStyle(trip, i) + '"></span>' + fmtNum(p) + '</span>';
+      }).join('');
+      html +=
+        '<tr data-id="' + e.id + '">' +
+          '<td>' + fmtDate(e.date) + '</td>' +
+          '<td class="desc-cell"><span class="desc-text">' + escapeHtml(e.desc || '—') + '</span></td>' +
+          '<td><span class="payer-tag"><span class="dot" style="' + dotStyle(trip, payerIdx) + '"></span>' + escapeHtml(e.payer || '—') + '</span></td>' +
+          '<td><span class="parts-mini">' + (partsHtml || '<span class="chip">—</span>') + '</span></td>' +
+          '<td class="num col-value">' + fmtMoney(e.value, trip) + '</td>' +
+          '<td class="num"><span class="row-actions">' +
+            '<button class="icon-btn" data-edit="' + e.id + '" title="Editar">' +
+              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' +
+            '</button>' +
+            '<button class="icon-btn danger" data-del="' + e.id + '" title="Excluir">' +
+              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/></svg>' +
+            '</button>' +
+          '</span></td>' +
+        '</tr>';
+    });
+    html += '</tbody>';
+    table.innerHTML = html;
+  }
+
+  // ---------- Modal de caixinha ----------
+  function openTripModal(editId) {
+    const modal = $('#tripModal');
+    const isEdit = !!editId;
+    const trip = isEdit ? Store.getTrip(editId) : null;
+    $('#tripModalTitle').textContent = isEdit ? 'Editar caixinha' : 'Nova Caixinha';
+    $('#tripSubmitBtn').textContent = isEdit ? 'Salvar' : 'Criar caixinha';
+    modal.dataset.editId = editId || '';
+
+    $('#tripName').value = trip ? trip.name : '';
+    $('#tripCode')._setCode(trip ? (trip.code || '') : '');
+    $('#familyCount').value = trip ? trip.families.length : 3;
+
+    // moeda
+    const preset = $('#currencyPreset');
+    if (trip) {
+      const key = trip.currency.code + '|' + trip.currency.symbol;
+      const match = Array.prototype.some.call(preset.options, function (o) { return o.value === key; });
+      if (match) { preset.value = key; $('#customCurrencyRow').hidden = true; }
+      else {
+        preset.value = '__custom__';
+        $('#customCurrencyRow').hidden = false;
+        $('#currencyCode').value = trip.currency.code || '';
+        $('#currencySymbol').value = trip.currency.symbol || '';
+      }
+    } else {
+      preset.value = 'USD|$';
+      $('#customCurrencyRow').hidden = true;
+    }
+
+    buildFamilyNameInputs(trip ? trip.families : ['', '', ''], trip ? trip.colors : null);
+    modal.hidden = false;
+    setTimeout(function () { $('#tripName').focus(); }, 40);
+  }
+
+  function defaultHexColors(i) {
+    const v = famVisual(null, i);
+    return { bg: v.bg, fg: v.fg, border: v.border };
+  }
+
+  function buildFamilyNameInputs(names, colors) {
+    const host = $('#familyNames');
+    const count = Math.max(2, Math.min(12, parseInt($('#familyCount').value, 10) || 2));
+    host.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const val = names[i] || '';
+      const def = defaultHexColors(i);
+      const c = (colors && colors[i]) || {};
+      const bg = c.bg || def.bg, fg = c.fg || def.fg, border = c.border || def.border;
+      const row = document.createElement('div');
+      row.className = 'family-name-input';
+      row.dataset.index = i;
+      row.innerHTML =
+        '<span class="fam-avatar fam-preview" style="background:' + bg + ';color:' + fg + ';border:1.5px solid ' + border + '">' + (initials(val) || (i + 1)) + '</span>' +
+        '<input type="text" class="fam-name-field" placeholder="Família ' + (i + 1) + '" value="' + escapeHtml(val) + '" />' +
+        '<div class="fam-colors">' +
+          '<input type="color" class="fam-color-border" title="Borda" value="' + border + '">' +
+          '<input type="color" class="fam-color-bg" title="Interior" value="' + bg + '">' +
+          '<input type="color" class="fam-color-fg" title="Letra" value="' + fg + '">' +
+        '</div>';
+      host.appendChild(row);
+    }
+  }
+
+  function updateFamilyPreview(row) {
+    const bg = row.querySelector('.fam-color-bg').value;
+    const fg = row.querySelector('.fam-color-fg').value;
+    const border = row.querySelector('.fam-color-border').value;
+    const av = row.querySelector('.fam-preview');
+    av.style.background = bg;
+    av.style.color = fg;
+    av.style.border = '1.5px solid ' + border;
+  }
+
+  function readFamilyInputs() {
+    const names = [], colors = [];
+    $$('#familyNames .family-name-input').forEach(function (row) {
+      names.push(row.querySelector('.fam-name-field').value);
+      colors.push({
+        bg: row.querySelector('.fam-color-bg').value,
+        border: row.querySelector('.fam-color-border').value,
+        fg: row.querySelector('.fam-color-fg').value
+      });
+    });
+    return { names: names, colors: colors };
+  }
+
+  function submitTripForm(ev) {
+    ev.preventDefault();
+    const editId = $('#tripModal').dataset.editId || '';
+    const name = $('#tripName').value.trim();
+    if (!name) { toast('Informe o nome da caixinha.', 'error'); return; }
+
+    const code = Store.sanitizeCode($('#tripCode')._getCode());
+    if (!code) { toast('Informe o código da caixinha.', 'error'); return; }
+    const codeOwner = Store.getTripByCode(code);
+    if (codeOwner && codeOwner.id !== editId) {
+      toast('Já existe uma caixinha com o código "' + code + '".', 'error');
+      return;
+    }
+
+    const fam = readFamilyInputs();
+    const families = fam.names.map(function (nm, i) {
+      return String(nm).trim() || ('Família ' + (i + 1));
+    });
+    const colors = fam.colors;
+    const seen = {};
+    for (let i = 0; i < families.length; i++) {
+      let nm = families[i], k = 2;
+      while (seen[nm.toLowerCase()]) { nm = families[i] + ' ' + k; k++; }
+      families[i] = nm; seen[nm.toLowerCase()] = true;
+    }
+
+    let currency;
+    const presetVal = $('#currencyPreset').value;
+    if (presetVal === '__custom__') {
+      currency = {
+        code: ($('#currencyCode').value.trim() || 'CUR').toUpperCase(),
+        symbol: $('#currencySymbol').value.trim() || '$'
+      };
+    } else {
+      const p = presetVal.split('|');
+      currency = { code: p[0], symbol: p[1] };
+    }
+
+    if (editId) {
+      const trip = Store.getTrip(editId);
+      // Remapeia despesas se a quantidade de famílias mudou
+      const old = trip.families;
+      const patchedExpenses = trip.expenses.map(function (e) {
+        const parts = [];
+        for (let i = 0; i < families.length; i++) parts.push(Number(e.parts[i]) || 0);
+        let payer = e.payer;
+        const oldIdx = old.indexOf(e.payer);
+        if (oldIdx >= 0 && oldIdx < families.length) payer = families[oldIdx];
+        else if (families.indexOf(payer) === -1) payer = families[0];
+        return Object.assign({}, e, { parts: parts, payer: payer });
+      });
+      Store.updateTrip(editId, { code: code, name: name, currency: currency, families: families, colors: colors, expenses: patchedExpenses });
+      toast('Caixinha atualizada.', 'success');
+      closeModal($('#tripModal'));
+      openTrip(editId);
+    } else {
+      const trip = Store.createTrip({ code: code, name: name, currency: currency, families: families, colors: colors });
+      toast('Caixinha criada!', 'success');
+      closeModal($('#tripModal'));
+      openTrip(trip.id);
+    }
+  }
+
+  // ---------- Modal de despesa ----------
+  function openExpenseModal(editId) {
+    const trip = currentTrip();
+    if (!trip) return;
+    state.editingExpenseId = editId || null;
+    const exp = editId ? trip.expenses.find(function (e) { return e.id === editId; }) : null;
+
+    $('#expenseModalTitle').textContent = exp ? 'Editar despesa' : 'Nova despesa';
+    $('#expenseSubmitBtn').textContent = exp ? 'Salvar' : 'Adicionar';
+
+    $('#expDate').value = exp ? exp.date : new Date().toISOString().slice(0, 10);
+    $('#expValue').value = exp ? String(exp.value).replace('.', ',') : '';
+    $('#expDesc').value = exp ? exp.desc : '';
+
+    const payerSel = $('#expPayer');
+    payerSel.innerHTML = '';
+    trip.families.forEach(function (f) {
+      const o = document.createElement('option');
+      o.value = f; o.textContent = f;
+      if (exp && exp.payer === f) o.selected = true;
+      payerSel.appendChild(o);
+    });
+
+    const partsHost = $('#expParts');
+    partsHost.innerHTML = '';
+    trip.families.forEach(function (f, i) {
+      const val = exp ? (exp.parts[i] != null ? exp.parts[i] : 0) : 1;
+      const row = document.createElement('div');
+      row.className = 'part-input';
+      row.innerHTML =
+        '<span class="fam-avatar" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(f)) + '</span>' +
+        '<span class="part-label">' + escapeHtml(f) + '</span>' +
+        '<input type="number" class="part-field" data-fam="' + i + '" min="0" step="any" value="' + fmtNum(val) + '" />' +
+        '<span class="part-share" data-share="' + i + '"></span>';
+      partsHost.appendChild(row);
+    });
+
+    updateExpensePreview();
+    $('#expenseModal').hidden = false;
+    setTimeout(function () { $('#expValue').focus(); }, 40);
+  }
+
+  function readExpenseForm() {
+    const trip = currentTrip();
+    const value = Calc.evalAmount($('#expValue').value);
+    const parts = $$('.part-field').map(function (inp) { return Number(inp.value) || 0; });
+    return {
+      date: $('#expDate').value,
+      value: value,
+      payer: $('#expPayer').value,
+      parts: parts,
+      desc: $('#expDesc').value.trim(),
+      trip: trip
+    };
+  }
+
+  function updateExpensePreview() {
+    const trip = currentTrip();
+    if (!trip) return;
+    const raw = $('#expValue').value;
+    const value = Calc.evalAmount(raw);
+    const hint = $('#expValueHint');
+    if (raw && /[+\-*/]/.test(raw.replace(/^-/, '')) && !isNaN(value)) {
+      hint.textContent = '= ' + fmtMoney(value, trip);
+    } else { hint.textContent = ''; }
+
+    const parts = $$('.part-field').map(function (inp) { return Number(inp.value) || 0; });
+    const shares = Calc.shares({ value: isNaN(value) ? 0 : value, parts: parts });
+    $$('.part-share').forEach(function (el, i) {
+      el.textContent = shares[i] ? fmtMoney(shares[i], trip) : '';
+    });
+
+    const preview = $('#expPreview');
+    if (!isNaN(value) && value > 0) {
+      let rows = trip.families.map(function (f, i) {
+        return '<div class="pv-row"><span>' + escapeHtml(f) + '</span><span>' + fmtMoney(shares[i], trip) + '</span></div>';
+      }).join('');
+      preview.innerHTML = rows +
+        '<div class="pv-row pv-total"><span>Total</span><span>' + fmtMoney(value, trip) + '</span></div>';
+      preview.classList.add('show');
+    } else {
+      preview.classList.remove('show');
+    }
+  }
+
+  function submitExpenseForm(ev) {
+    ev.preventDefault();
+    const trip = currentTrip();
+    if (!trip) return;
+    const f = readExpenseForm();
+    if (!f.date) { toast('Informe a data.', 'error'); return; }
+    if (isNaN(f.value) || f.value <= 0) { toast('Valor inválido.', 'error'); return; }
+    const totalParts = f.parts.reduce(function (a, b) { return a + b; }, 0);
+    if (totalParts <= 0) { toast('Defina ao menos uma parte.', 'error'); return; }
+
+    if (state.editingExpenseId) {
+      Store.updateExpense(trip.id, state.editingExpenseId, {
+        date: f.date, value: f.value, payer: f.payer, parts: f.parts, desc: f.desc
+      });
+      toast('Despesa atualizada.', 'success');
+    } else {
+      Store.addExpense(trip.id, {
+        date: f.date, value: f.value, payer: f.payer, parts: f.parts, desc: f.desc
+      });
+      toast('Despesa adicionada.', 'success');
+    }
+    closeModal($('#expenseModal'));
+    render();
+  }
+
+  // ---------- Confirmação ----------
+  function confirmAction(message, cb) {
+    $('#confirmMessage').textContent = message;
+    state.confirmCb = cb;
+    $('#confirmModal').hidden = false;
+  }
+
+  // ---------- Modais util ----------
+  function closeModal(modal) { modal.hidden = true; }
+  function closeAllMenus() {
+    $('#menuDropdown').hidden = true;
+    $('#menuBtn').setAttribute('aria-expanded', 'false');
+  }
+
+  // ---------- Eventos ----------
+  function bindEvents() {
+    var newTripBtn = $('#newTripBtn');
+    if (newTripBtn) newTripBtn.addEventListener('click', function () { openTripModal(null); });
+    document.addEventListener('click', function (e) {
+      const act = e.target.closest('[data-action]');
+      if (act && act.dataset.action === 'new-trip') openTripModal(null);
+    });
+
+    // Gate (abrir por código)
+    setupCodeInput($('#gateCode'));
+    setupCodeInput($('#tripCode'));
+    $('#gateForm').addEventListener('submit', submitGate);
+
+    // Roteamento por URL (#CODIGO)
+    window.addEventListener('hashchange', handleRoute);
+
+    // Chips de navegação (Despesas / Resumo)
+    $$('.fn-chip[data-view]').forEach(function (chip) {
+      chip.addEventListener('click', function () { setView(chip.getAttribute('data-view')); });
+    });
+
+    // menu
+    $('#menuBtn').addEventListener('click', function (e) {
+      e.stopPropagation();
+      const dd = $('#menuDropdown');
+      const willOpen = dd.hidden;
+      dd.hidden = !willOpen;
+      $('#menuBtn').setAttribute('aria-expanded', String(willOpen));
+    });
+    $('#menuDropdown').addEventListener('click', function (e) {
+      const item = e.target.closest('[data-action]');
+      if (!item) return;
+      const action = item.dataset.action;
+      closeAllMenus();
+      switch (action) {
+        case 'edit-trip': if (currentTrip()) openTripModal(state.tripId); break;
+        case 'toggle-theme': toggleTheme(); break;
+      }
+    });
+    document.addEventListener('click', function () { closeAllMenus(); });
+
+    // Trip modal
+    $('#familyCount').addEventListener('input', function () {
+      const cur = readFamilyInputs();
+      buildFamilyNameInputs(cur.names, cur.colors);
+    });
+    $('#familyNames').addEventListener('input', function (e) {
+      const row = e.target.closest('.family-name-input');
+      if (!row) return;
+      if (e.target.matches('.fam-color-bg, .fam-color-fg, .fam-color-border')) {
+        updateFamilyPreview(row);
+      } else if (e.target.matches('.fam-name-field')) {
+        const idx = parseInt(row.dataset.index, 10) || 0;
+        row.querySelector('.fam-preview').textContent = initials(e.target.value) || (idx + 1);
+      }
+    });
+    $('#currencyPreset').addEventListener('change', function (e) {
+      $('#customCurrencyRow').hidden = e.target.value !== '__custom__';
+    });
+    $('#tripForm').addEventListener('submit', submitTripForm);
+
+    // Expense modal
+    $('#addExpenseBtn').addEventListener('click', function () { openExpenseModal(null); });
+    $('#expenseForm').addEventListener('submit', submitExpenseForm);
+    $('#expValue').addEventListener('input', updateExpensePreview);
+    $('#expParts').addEventListener('input', updateExpensePreview);
+
+    // Expense table actions
+    $('#expensesTable').addEventListener('click', function (e) {
+      const editBtn = e.target.closest('[data-edit]');
+      const delBtn = e.target.closest('[data-del]');
+      if (editBtn) { openExpenseModal(editBtn.dataset.edit); return; }
+      if (delBtn) {
+        const trip = currentTrip();
+        const exp = trip.expenses.find(function (x) { return x.id === delBtn.dataset.del; });
+        confirmAction('Excluir a despesa "' + (exp && exp.desc ? exp.desc : 'sem descrição') + '"?', function () {
+          Store.deleteExpense(trip.id, delBtn.dataset.del);
+          toast('Despesa excluída.');
+          render();
+        });
+      }
+    });
+
+    $('#expenseSearch').addEventListener('input', function (e) {
+      state.search = e.target.value;
+      renderExpenses(currentTrip());
+    });
+
+    // Confirm modal
+    $('#confirmOkBtn').addEventListener('click', function () {
+      const cb = state.confirmCb;
+      state.confirmCb = null;
+      closeModal($('#confirmModal'));
+      if (cb) cb();
+    });
+
+    // Fechar modais (botões [data-close] e clique no overlay)
+    $$('.modal-overlay').forEach(function (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay || e.target.closest('[data-close]')) {
+          closeModal(overlay);
+        }
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        $$('.modal-overlay').forEach(function (m) { if (!m.hidden) closeModal(m); });
+        closeAllMenus();
+      }
+    });
+  }
+
+  // ---------- Init ----------
+  async function init() {
+    applyTheme(Store.getTheme());
+    bindEvents();
+    await Store.seedFromFiles();
+
+    // A viagem só é aberta via URL (#CODIGO) ou pelo gate; ao abrir o site
+    // mostramos apenas o box de entrada.
+    handleRoute();
+    $('#app-loading').style.display = 'none';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+})();

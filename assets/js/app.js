@@ -144,7 +144,7 @@
 
     const data = Calc.compute(trip);
     renderTripHeader(trip, data);
-    renderSummaryCards(trip, data);
+    renderConsolidated(trip, data);
     renderBalances(trip, data);
     renderMatrix(trip, data);
     renderExpenses(trip);
@@ -311,12 +311,11 @@
 
   function renderTripHeader(trip, data) {
     const moeda = currencyLabel(trip.currency);
-    $('#brandTitle').textContent = 'Caixinha - ' + trip.name;
+    $('#brandTitle').textContent = trip.name;
     $('#brandSub').textContent =
-      'Finanças de viagem · ' +
       trip.families.length + ' famílias · ' +
       data.count + ' despesa' + (data.count === 1 ? '' : 's') + ' · ' +
-      'Moeda: ' + moeda;
+      moeda;
   }
 
   // Moeda no formato "Nome (símbolo)", ex.: "Dólar ($)".
@@ -332,31 +331,45 @@
     return name + ' (' + (cur.symbol || '') + ')';
   }
 
-  function renderSummaryCards(trip, data) {
-    const host = $('#summaryCards');
+  function renderConsolidated(trip, data) {
+    const host = $('#consolidatedBox');
     host.innerHTML = '';
+    const fams = trip.families;
+    if (!fams.length) return;
 
-    trip.families.forEach(function (fam, i) {
-      const paid = data.totals.paid[i];
-      const consumed = data.totals.consumed[i];
-      const net = data.totals.net[i];
-      const badgeCls = Math.abs(net) < 0.005 ? 'zero' : (net > 0 ? 'pos' : 'neg');
-      const badgeTxt = Math.abs(net) < 0.005 ? 'quitado' : (net > 0 ? 'a receber ' + fmtMoney(net, trip) : 'a pagar ' + fmtMoney(-net, trip));
-      const card = document.createElement('div');
-      card.className = 'card family-card';
-      card.innerHTML =
-        '<div class="card-head">' +
-          '<span class="fam-avatar" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(fam)) + '</span>' +
-          '<span class="fam-name">' + escapeHtml(fam) + '</span>' +
-        '</div>' +
-        '<div class="stat-row"><span>Pagou</span><span>' + fmtMoney(paid, trip) + '</span></div>' +
-        '<div class="stat-row"><span>Consumiu</span><span>' + fmtMoney(consumed, trip) + '</span></div>' +
-        '<div class="family-net">' +
-          '<span class="net-label">Saldo</span>' +
-          '<span class="badge ' + badgeCls + '">' + badgeTxt + '</span>' +
-        '</div>';
-      host.appendChild(card);
+    let head = '<div class="cons-cell cons-corner"></div>';
+    fams.forEach(function (fam, i) {
+      head += '<div class="cons-cell cons-head">' +
+        '<span class="fam-avatar" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(fam)) + '</span>' +
+        '<span class="cons-name">' + escapeHtml(fam) + '</span>' +
+      '</div>';
     });
+
+    function row(label, arr, isNet) {
+      const extra = isNet ? ' cons-saldo' : '';
+      let out = '<div class="cons-cell cons-label' + extra + '">' + label + '</div>';
+      arr.forEach(function (v, i) {
+        let cls = 'cons-cell cons-val' + extra;
+        if (isNet) {
+          const c = Math.abs(v) < 0.005 ? 'zero' : (v > 0 ? 'pos' : 'neg');
+          cls += ' net ' + c;
+        }
+        out += '<div class="' + cls + '">' + fmtMoney(v, trip) + '</div>';
+      });
+      return out;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'card consolidated-card';
+    card.style.setProperty('--cons-cols', fams.length);
+    card.innerHTML =
+      '<div class="cons-grid">' +
+        head +
+        row('Pagou', data.totals.paid, false) +
+        row('Usou', data.totals.consumed, false) +
+        row('Saldo', data.totals.net, true) +
+      '</div>';
+    host.appendChild(card);
   }
 
   function renderBalances(trip, data) {
@@ -400,18 +413,21 @@
     const M = data.matrix;
     const t = data.totals;
     const table = $('#summaryMatrix');
-    let html = '<thead><tr><th>Pagante \\ Família</th>';
-    fams.forEach(function (f) { html += '<th class="fam-col"><span class="mnum">' + escapeHtml(f) + '</span></th>'; });
-    html += '<th class="total-col">Total pago</th></tr></thead><tbody>';
+    function av(i, f) {
+      return '<span class="fam-avatar mtx-av" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(f)) + '</span>';
+    }
+    let html = '<thead><tr><th class="corner"></th>';
+    fams.forEach(function (f, j) { html += '<th class="fam-col">' + av(j, f) + '</th>'; });
+    html += '<th class="total-col">Pago</th></tr></thead><tbody>';
     fams.forEach(function (payer, i) {
-      html += '<tr><td class="row-label">' + escapeHtml(payer) + '</td>';
+      html += '<tr><td class="row-label">' + av(i, payer) + '</td>';
       fams.forEach(function (_, j) {
         const cls = i === j ? 'diag' : '';
         html += '<td class="fam-col ' + cls + '"><span class="mnum">' + fmtMoney(M[i][j], trip) + '</span></td>';
       });
       html += '<td class="total-col">' + fmtMoney(t.paid[i], trip) + '</td></tr>';
     });
-    html += '<tr class="total-row"><td>Total consumido</td>';
+    html += '<tr class="total-row"><td>Usado</td>';
     fams.forEach(function (_, j) { html += '<td class="fam-col"><span class="mnum">' + fmtMoney(t.consumed[j], trip) + '</span></td>'; });
     html += '<td>' + fmtMoney(t.grand, trip) + '</td></tr>';
     html += '</tbody>';
@@ -831,6 +847,10 @@
   function bindEvents() {
     var newTripBtn = $('#newTripBtn');
     if (newTripBtn) newTripBtn.addEventListener('click', function () { openTripModal(null); });
+
+    // Clicar no cofrinho volta para a página inicial.
+    var brandMark = $('.brand-mark');
+    if (brandMark) brandMark.addEventListener('click', function () { showGate(); });
     document.addEventListener('click', function (e) {
       const act = e.target.closest('[data-action]');
       if (act && act.dataset.action === 'new-trip') openTripModal(null);
@@ -901,7 +921,7 @@
     });
 
     // Expense modal
-    $('#addExpenseBtn').addEventListener('click', function () { openExpenseModal(null); });
+    $('.fn-chip[data-action="add-expense"]').addEventListener('click', function () { openExpenseModal(null); });
     $('#expenseForm').addEventListener('submit', submitExpenseForm);
     $('#expValue').addEventListener('input', updateExpensePreview);
     $('#expParts').addEventListener('input', updateExpensePreview);

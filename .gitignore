@@ -1,7 +1,0 @@
-# Ambiente / temporários
-.DS_Store
-Thumbs.db
-*.log
-
-# Não versionar a planilha original (opcional — remova se quiser mantê-la)
-# Financas.xlsx

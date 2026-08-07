@@ -525,10 +525,9 @@ table { border-collapse: collapse; width: 100%; }
 /* No celular o modal vira um painel ancorado embaixo, com altura consistente
    (dvh) — fica igual em telas de alturas diferentes (ex.: iPhone 11 vs 13). */
 @media (max-width: 640px) {
-  .modal-overlay { place-items: end center; padding: 0; }
+  .modal-overlay { place-items: end center; padding: 0 16px 16px; }
   .modal {
     max-width: none; height: 90dvh; max-height: 90dvh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 }
 

@@ -33,6 +33,17 @@
         1
       ],
       "desc": "Hotel 1 - Madrid"
+    },
+    {
+      "id": "exp-msjgvbn9-o1g70",
+      "date": "2026-08-07",
+      "value": 1434.06,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Airlines (AirEuropa)"
     }
   ],
   "createdAt": "2026-08-07"

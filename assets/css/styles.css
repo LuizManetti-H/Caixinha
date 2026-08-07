@@ -512,7 +512,7 @@ table { border-collapse: collapse; width: 100%; }
 .modal {
   background: var(--bg-elev); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-  width: 100%; max-width: 520px; max-height: 90vh; overflow: auto;
+  width: 100%; max-width: 520px; max-height: 90vh; max-height: 90dvh; overflow: auto;
   animation: rise .2s cubic-bezier(.2,.8,.2,1);
 }
 .modal-sm { max-width: 420px; }
@@ -521,6 +521,16 @@ table { border-collapse: collapse; width: 100%; }
 .modal-head h2 { font-size: 20px; margin: 0; }
 .modal-body { padding: 16px 22px 22px; }
 .modal-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+/* No celular o modal vira um painel ancorado embaixo, com altura consistente
+   (dvh) — fica igual em telas de alturas diferentes (ex.: iPhone 11 vs 13). */
+@media (max-width: 640px) {
+  .modal-overlay { place-items: end center; padding: 0; }
+  .modal {
+    max-width: none; height: 90dvh; max-height: 90dvh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+}
 
 .field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 13px; font-weight: 600; color: var(--text-soft); }

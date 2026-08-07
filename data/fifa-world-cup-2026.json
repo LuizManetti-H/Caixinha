@@ -9,7 +9,7 @@
   "families": [
     "Gerson",
     "Luiz",
-    "Monts"
+    "Tio Paulo"
   ],
   "colors": [
     {
@@ -82,7 +82,7 @@
       "id": "wc-005",
       "date": "2026-06-28",
       "value": 41.86,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -94,7 +94,7 @@
       "id": "wc-006",
       "date": "2026-06-28",
       "value": 512.29,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -106,7 +106,7 @@
       "id": "wc-007",
       "date": "2026-06-28",
       "value": 45.44,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -118,7 +118,7 @@
       "id": "wc-008",
       "date": "2026-06-28",
       "value": 32.96,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -298,7 +298,7 @@
       "id": "wc-023",
       "date": "2026-07-07",
       "value": 5909.88,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -346,7 +346,7 @@
       "id": "wc-027",
       "date": "2026-07-08",
       "value": 290.6,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -418,7 +418,7 @@
       "id": "wc-033",
       "date": "2026-07-10",
       "value": 60,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -514,7 +514,7 @@
       "id": "wc-041",
       "date": "2026-07-12",
       "value": 92.22,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,
@@ -694,7 +694,7 @@
       "id": "wc-056",
       "date": "2026-07-25",
       "value": 10.16,
-      "payer": "Monts",
+      "payer": "Tio Paulo",
       "parts": [
         1,
         1,

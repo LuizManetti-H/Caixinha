@@ -67,6 +67,49 @@
     const v = Number(n) || 0;
     return Number.isInteger(v) ? String(v) : v.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
   }
+  // Nº de casas decimais reais de um número (sem arredondar).
+  function partDecimalsOf(n) {
+    const s = String(Number(n));
+    if (!isFinite(n) || s.indexOf('e') !== -1 || s.indexOf('E') !== -1) return 0;
+    const dot = s.indexOf('.');
+    return dot === -1 ? 0 : s.length - dot - 1;
+  }
+  // Regras de exibição das partes:
+  // - inteiro: sem casas
+  // - decimal: no mínimo 2 casas
+  // - se houver zero após a segunda casa, limita a exibição a 2 casas
+  function partDisplayDecimals(n) {
+    const v = Number(n);
+    if (!isFinite(v) || Number.isInteger(v)) return 0;
+    const decimals = partDecimalsOf(v);
+    if (decimals <= 2) return 2;
+    const fraction = String(v).split('.')[1] || '';
+    return fraction.slice(2).indexOf('0') !== -1 ? 2 : decimals;
+  }
+  function partFixedString(n, dec, grouped) {
+    const v = Number(n);
+    if (!isFinite(v)) return '';
+    const sign = v < 0 ? '-' : '';
+    const raw = String(Math.abs(v)).split('.');
+    const integer = grouped
+      ? Number(raw[0]).toLocaleString('pt-BR', { maximumFractionDigits: 0 })
+      : raw[0];
+    if (dec <= 0) return sign + integer;
+    const fraction = (raw[1] || '').padEnd(dec, '0').slice(0, dec);
+    return sign + integer + ',' + fraction;
+  }
+  // Valor da parte para o input (precisão total, vírgula decimal).
+  function partToInput(n) {
+    if (n === '' || n == null) return '';
+    const v = Number(n);
+    if (!isFinite(v)) return '';
+    const dec = partDisplayDecimals(v);
+    return partFixedString(v, dec, false);
+  }
+  // Formata a parte com um nº fixo de casas decimais.
+  function fmtPartNum(n, dec) {
+    return partFixedString(n, dec, true);
+  }
   function fmtDate(iso) {
     if (!iso) return '';
     const parts = String(iso).split('-');
@@ -523,14 +566,16 @@
       const weightsHtml = fams.map(function (f, i) {
         const p = Number(e.parts[i]) || 0;
         const has = p > 0;
-        return '<span class="part-weight' + (has ? '' : ' empty') + '" style="grid-column:' + (i + 2) + ';grid-row:1" title="' + escapeHtml(f) + '">' +
-          (has ? fmtNum(p) : '–') +
+        // Lista de despesas: sempre 0 (inteiro) ou 2 casas decimais.
+        const dec = Number.isInteger(p) ? 0 : 2;
+        return '<span class="part-weight' + (has ? '' : ' empty') + '" style="grid-column:' + (i + 1) + ';grid-row:2" title="' + escapeHtml(f) + '">' +
+          (has ? fmtPartNum(p, dec) : '–') +
         '</span>';
       }).join('');
       const moneyHtml = fams.map(function (f, i) {
         const p = Number(e.parts[i]) || 0;
         const has = p > 0;
-        return '<span class="part-money' + (has ? '' : ' empty') + '" style="grid-column:' + (i + 2) + ';grid-row:2" title="' + escapeHtml(f) + '">' +
+        return '<span class="part-money' + (has ? '' : ' empty') + '" style="grid-column:' + (i + 1) + ';grid-row:3" title="' + escapeHtml(f) + '">' +
           (has ? fmtMoney(sh[i], trip) : '–') +
         '</span>';
       }).join('');
@@ -733,13 +778,13 @@
     const partsHost = $('#expParts');
     partsHost.innerHTML = '';
     trip.families.forEach(function (f, i) {
-      const val = exp ? (exp.parts[i] != null ? exp.parts[i] : 0) : 1;
+      const valStr = exp ? partToInput(exp.parts[i] != null ? exp.parts[i] : 0) : '';
       const row = document.createElement('div');
       row.className = 'part-input';
       row.innerHTML =
         '<span class="fam-avatar" style="' + avatarStyle(trip, i) + '">' + escapeHtml(initials(f)) + '</span>' +
         '<span class="part-label">' + escapeHtml(f) + '</span>' +
-        '<input type="text" inputmode="decimal" class="part-field" data-fam="' + i + '" value="' + fmtNum(val) + '" />' +
+        '<input type="text" inputmode="text" class="part-field" data-fam="' + i + '" value="' + valStr + '" />' +
         '<span class="part-share" data-share="' + i + '"></span>';
       partsHost.appendChild(row);
     });
@@ -773,10 +818,25 @@
       hint.textContent = '= ' + fmtMoney(value, trip);
     } else { hint.textContent = ''; }
 
-    const parts = $$('.part-field').map(function (inp) { const v = Calc.evalAmount(inp.value); return isNaN(v) ? 0 : v; });
+    const partFields = $$('.part-field');
+    const parts = partFields.map(function (inp) { const v = Calc.evalAmount(inp.value); return isNaN(v) ? 0 : v; });
     const shares = Calc.shares({ value: isNaN(value) ? 0 : value, parts: parts });
-    $$('.part-share').forEach(function (el, i) {
-      el.textContent = shares[i] ? fmtMoney(shares[i], trip) : '';
+    const partsTotal = parts.reduce(function (a, b) { return a + b; }, 0);
+
+    // Formatação individual por valor (evita zeros finais adicionais).
+    function fmtPart(n) {
+      return fmtPartNum(n, partDisplayDecimals(n));
+    }
+    // Reformata as partes preenchidas (menos a em foco) conforme a regra de exibição.
+    partFields.forEach(function (inp, i) {
+      if (inp === document.activeElement || inp.value.trim() === '') return;
+      inp.value = partToInput(parts[i]);
+    });
+
+    const shareEls = $$('.part-share');
+    shareEls.forEach(function (el, i) {
+      // Só a última família mostra o total das partes (à direita).
+      el.textContent = (i === shareEls.length - 1 && partsTotal > 0) ? fmtPart(partsTotal) : '';
     });
 
     const preview = $('#expPreview');
@@ -1003,6 +1063,7 @@
     $('#expenseForm').addEventListener('submit', submitExpenseForm);
     $('#expValue').addEventListener('input', updateExpensePreview);
     $('#expParts').addEventListener('input', updateExpensePreview);
+    $('#expParts').addEventListener('focusout', updateExpensePreview);
     $('#expenseDeleteBtn').addEventListener('click', function () {
       const trip = currentTrip();
       const id = state.editingExpenseId;

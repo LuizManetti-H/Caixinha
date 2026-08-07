@@ -22,6 +22,18 @@
       "border": "#0000cb"
     }
   ],
-  "expenses": [],
+  "expenses": [
+    {
+      "id": "exp-msjgtvyf-3856c",
+      "date": "2026-08-07",
+      "value": 663.34,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hotel 1 - Madrid"
+    }
+  ],
   "createdAt": "2026-08-07"
 }

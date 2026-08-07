@@ -5,13 +5,21 @@
   const $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
   const $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
 
-  const FAM_COLORS = ['#6d5efc', '#12a969', '#f5a524', '#e5484d', '#0ea5e9', '#d946ef',
+  const FAM_COLORS = ['#009C3B', '#FFDF00', '#002776', '#e5484d', '#0ea5e9', '#d946ef',
     '#14b8a6', '#f97316', '#8b5cf6', '#ec4899', '#22c55e', '#eab308'];
+  // Tons da bandeira do Brasil e defaults por família (interior, letra, borda).
+  const FLAG_GREEN = '#009C3B', FLAG_YELLOW = '#FFDF00', FLAG_BLUE = '#002776';
+  const FAM_DEFAULTS = [
+    { bg: FLAG_GREEN, fg: FLAG_BLUE, border: FLAG_YELLOW },
+    { bg: FLAG_YELLOW, fg: FLAG_GREEN, border: FLAG_BLUE },
+    { bg: FLAG_BLUE, fg: FLAG_YELLOW, border: FLAG_GREEN }
+  ];
 
   const state = {
     tripId: null,
     editingExpenseId: null,
     confirmCb: null,
+    deletePassCb: null,
     search: '',
     view: 'resumo',
     route: 'gate',
@@ -29,6 +37,7 @@
       const bg = c.bg || '#ffffff';
       return { bg: bg, fg: c.fg || '#ffffff', border: c.border || bg };
     }
+    if (FAM_DEFAULTS[i]) return Object.assign({}, FAM_DEFAULTS[i]);
     const base = famColor(i);
     return { bg: base, fg: '#ffffff', border: base };
   }
@@ -104,6 +113,38 @@
     });
   }
 
+  function syncDelete(id) {
+    if (!id || typeof Sync === 'undefined' || !Sync.isConfigured()) return;
+    Sync.deleteTrip(id).catch(function (e) {
+      if (e && e.code === 'NOT_CONFIGURED') return;
+      toast('Falha ao remover no GitHub: ' + (e && e.message ? e.message : 'erro'), 'error');
+    });
+  }
+
+  // Edições só são permitidas quando há token (sync ready). Sem token, modo somente leitura.
+  function canEdit() {
+    return typeof Sync !== 'undefined' && !!(Sync.getConfig().token);
+  }
+  function requireEdit() {
+    if (canEdit()) return true;
+    toast('Somente leitura: configure o token em Sincronização para editar.', 'error');
+    return false;
+  }
+  function applyEditability() {
+    const ro = !canEdit();
+    document.body.classList.toggle('is-readonly', ro);
+    $$('.fn-chip[data-action="add-expense"]').forEach(function (b) { b.disabled = ro; });
+    $$('[data-action="new-trip"]').forEach(function (b) { b.disabled = ro; });
+    $$('[data-action="edit-trip"]').forEach(function (b) { b.disabled = ro; });
+    $$('[data-action="sync-now"]').forEach(function (b) { b.disabled = ro; });
+    const modeEl = $('#menuMode');
+    if (modeEl) {
+      modeEl.textContent = ro ? 'Modo Leitura' : 'Modo Escrita';
+      modeEl.classList.toggle('read', ro);
+      modeEl.classList.toggle('write', !ro);
+    }
+  }
+
   // Busca as edições do repositório e re-renderiza se necessário.
   function pullAndRefresh(silent) {
     if (typeof Sync === 'undefined' || !Sync.hasRepo()) {
@@ -124,15 +165,6 @@
     });
   }
 
-  // ---------- Tema ----------
-  function applyTheme(t) {
-    document.documentElement.setAttribute('data-theme', t);
-    Store.setTheme(t);
-  }
-  function toggleTheme() {
-    applyTheme(Store.getTheme() === 'dark' ? 'light' : 'dark');
-  }
-
   // ---------- Render principal ----------
   function render() {
     const trip = currentTrip();
@@ -144,6 +176,7 @@
     $('#topbarActions').hidden = onGate;
     document.body.classList.toggle('is-gate', onGate);
     document.documentElement.classList.toggle('is-gate', onGate);
+    applyEditability();
 
     if (onGate) {
       $('#brandTitle').textContent = 'Caixinha';
@@ -519,11 +552,13 @@
 
   // ---------- Modal de caixinha ----------
   function openTripModal(editId) {
+    if (!requireEdit()) return;
     const modal = $('#tripModal');
     const isEdit = !!editId;
     const trip = isEdit ? Store.getTrip(editId) : null;
     $('#tripModalTitle').textContent = isEdit ? 'Editar caixinha' : 'Nova Caixinha';
     $('#tripSubmitBtn').textContent = isEdit ? 'Salvar' : 'Criar caixinha';
+    $('#tripDeleteBtn').hidden = !isEdit;
     modal.dataset.editId = editId || '';
 
     $('#tripName').value = trip ? trip.name : '';
@@ -543,7 +578,7 @@
         $('#currencySymbol').value = trip.currency.symbol || '';
       }
     } else {
-      preset.value = 'USD|$';
+      preset.value = 'BRL|R$';
       $('#customCurrencyRow').hidden = true;
     }
 
@@ -606,6 +641,7 @@
 
   function submitTripForm(ev) {
     ev.preventDefault();
+    if (!requireEdit()) return;
     const editId = $('#tripModal').dataset.editId || '';
     const name = $('#tripName').value.trim();
     if (!name) { toast('Informe o nome da caixinha.', 'error'); return; }
@@ -673,6 +709,7 @@
   function openExpenseModal(editId) {
     const trip = currentTrip();
     if (!trip) return;
+    if (!requireEdit()) return;
     state.editingExpenseId = editId || null;
     const exp = editId ? trip.expenses.find(function (e) { return e.id === editId; }) : null;
 
@@ -759,6 +796,7 @@
     ev.preventDefault();
     const trip = currentTrip();
     if (!trip) return;
+    if (!requireEdit()) return;
     const f = readExpenseForm();
     if (!f.date) { toast('Informe a data.', 'error'); return; }
     if (isNaN(f.value) || f.value <= 0) { toast('Valor inválido.', 'error'); return; }
@@ -812,6 +850,7 @@
       Sync.setConfig({ token: '' });
       setSyncStatus('Não existe token registrado.', '');
       updateSyncBadge();
+      applyEditability();
       return Promise.resolve();
     }
     const prevToken = Sync.getConfig().token || '';
@@ -828,9 +867,11 @@
       } else {
         Sync.setConfig({ token: prevToken });
       }
+      applyEditability();
     }).catch(function (e) {
       setSyncStatus('Erro: ' + (e && e.message ? e.message : 'falha'), 'error');
       Sync.setConfig({ token: prevToken });
+      applyEditability();
     });
   }
 
@@ -848,6 +889,17 @@
     $('#confirmMessage').textContent = message;
     state.confirmCb = cb;
     $('#confirmModal').hidden = false;
+  }
+
+  // Senha de deleção (placa do Konan).
+  const DELETE_PASSWORD = 'SCW9F77';
+  function confirmWithPassword(message, cb) {
+    $('#deletePassMessage').textContent = message;
+    $('#deletePassInput').value = '';
+    $('#deletePassError').hidden = true;
+    state.deletePassCb = cb;
+    $('#deletePassModal').hidden = false;
+    setTimeout(function () { $('#deletePassInput').focus(); }, 40);
   }
 
   // ---------- Modais util ----------
@@ -901,7 +953,6 @@
         case 'edit-trip': if (currentTrip()) openTripModal(state.tripId); break;
         case 'sync': openSyncModal(); break;
         case 'sync-now': pullAndRefresh(false); break;
-        case 'toggle-theme': toggleTheme(); break;
       }
     });
     document.addEventListener('click', function () { closeAllMenus(); });
@@ -925,6 +976,19 @@
       $('#customCurrencyRow').hidden = e.target.value !== '__custom__';
     });
     $('#tripForm').addEventListener('submit', submitTripForm);
+    $('#tripDeleteBtn').addEventListener('click', function () {
+      const editId = $('#tripModal').dataset.editId || '';
+      if (!editId) return;
+      if (!requireEdit()) return;
+      const trip = Store.getTrip(editId);
+      confirmWithPassword('Excluir a caixinha "' + (trip && trip.name ? trip.name : 'sem nome') + '"? Esta ação não pode ser desfeita.', function () {
+        Store.deleteTrip(editId);
+        syncDelete(editId);
+        toast('Caixinha excluída.');
+        closeModal($('#tripModal'));
+        showGate();
+      });
+    });
 
     // Sync modal
     $('#syncForm').addEventListener('submit', saveSync);
@@ -943,6 +1007,7 @@
       const trip = currentTrip();
       const id = state.editingExpenseId;
       if (!trip || !id) return;
+      if (!requireEdit()) return;
       const exp = trip.expenses.find(function (x) { return x.id === id; });
       confirmAction('Excluir a despesa "' + (exp && exp.desc ? exp.desc : 'sem descrição') + '"?', function () {
         Store.deleteExpense(trip.id, id);
@@ -983,6 +1048,25 @@
       if (cb) cb();
     });
 
+    // Confirmação por senha (deleção)
+    function submitDeletePassword() {
+      const val = ($('#deletePassInput').value || '').trim().toUpperCase();
+      if (val !== DELETE_PASSWORD) {
+        $('#deletePassError').hidden = false;
+        $('#deletePassInput').focus();
+        $('#deletePassInput').select();
+        return;
+      }
+      const cb = state.deletePassCb;
+      state.deletePassCb = null;
+      closeModal($('#deletePassModal'));
+      if (cb) cb();
+    }
+    $('#deletePassOkBtn').addEventListener('click', submitDeletePassword);
+    $('#deletePassInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); submitDeletePassword(); }
+    });
+
     // Fechar modais (botões [data-close] e clique no overlay)
     $$('.modal-overlay').forEach(function (overlay) {
       overlay.addEventListener('click', function (e) {
@@ -1001,7 +1085,6 @@
 
   // ---------- Init ----------
   async function init() {
-    applyTheme(Store.getTheme());
     bindEvents();
     await Store.seedFromFiles();
 

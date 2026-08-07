@@ -116,6 +116,23 @@
     return res.json();
   }
 
+  async function apiDeleteContent(cfg, path, sha, message) {
+    const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + path;
+    const body = { message: message || ('Caixinha: remove ' + path), sha: sha, branch: cfg.branch };
+    const res = await fetch(url, {
+      method: 'DELETE',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, apiHeaders(cfg)),
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(function () { return ''; });
+      const err = new Error('GitHub DELETE ' + path + ' → ' + res.status);
+      err.status = res.status; err.detail = detail;
+      throw err;
+    }
+    return res.json();
+  }
+
   // Leitura de texto: com token usa a API; sem token usa raw (repo público).
   async function getText(cfg, path) {
     if (cfg.token) {
@@ -239,6 +256,47 @@
     }
   }
 
+  // Remove uma caixinha do repositório (arquivo + manifesto).
+  async function deleteTrip(id) {
+    const cfg = getConfig();
+    if (!isConfigured()) {
+      const err = new Error('Sincronização não configurada (falta o token).');
+      err.code = 'NOT_CONFIGURED';
+      throw err;
+    }
+    if (!id) throw new Error('Caixinha inválida.');
+
+    pushing++;
+    try {
+      const m = await apiGetContent(cfg, 'data/trips.json');
+      let manifest = { trips: [] };
+      let manSha = null;
+      if (m) {
+        manSha = m.sha;
+        try { manifest = JSON.parse(base64ToUtf8(m.content)); } catch (e) { manifest = { trips: [] }; }
+      }
+      manifest.trips = manifest.trips || [];
+      const item = manifest.trips.find(function (t) { return t.id === id; });
+      const fileName = (item && item.file) || (id + '.json');
+      const path = 'data/' + fileName;
+
+      // Remove o arquivo da caixinha, se existir.
+      const existing = await apiGetContent(cfg, path);
+      if (existing) {
+        await apiDeleteContent(cfg, path, existing.sha, 'Caixinha: remove ' + id);
+      }
+
+      // Remove a entrada do manifesto.
+      if (item) {
+        manifest.trips = manifest.trips.filter(function (t) { return t.id !== id; });
+        await apiPutContent(cfg, 'data/trips.json', JSON.stringify(manifest, null, 2) + '\n',
+          manSha, 'Caixinha: remove ' + id + ' do índice');
+      }
+    } finally {
+      pushing--;
+    }
+  }
+
   // Testa a configuração: valida repositório e (se houver token) a permissão de escrita.
   async function test() {
     const cfg = getConfig();
@@ -277,6 +335,7 @@
     isConfigured: isConfigured,
     pull: pull,
     pushTrip: pushTrip,
+    deleteTrip: deleteTrip,
     test: test
   };
 })(window);

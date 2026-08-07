@@ -43,7 +43,7 @@
             <button class="menu-item" data-action="sync" role="menuitem">Sincronização</button>
             <button class="menu-item" data-action="sync-now" role="menuitem">Sincronizar agora</button>
             <div class="menu-sep"></div>
-            <button class="menu-item" data-action="toggle-theme" role="menuitem">Alternar tema</button>
+            <div class="menu-mode" id="menuMode" aria-live="polite">Modo Escrita</div>
           </div>
         </div>
       </div>
@@ -142,7 +142,7 @@
       <form id="tripForm" class="modal-body">
         <div class="field">
           <label for="tripName">Nome da caixinha</label>
-          <input type="text" id="tripName" required placeholder="Ex.: FIFA World Cup 2026" autocomplete="off" />
+          <input type="text" id="tripName" required placeholder="Ex.: Nome da Trip" autocomplete="off" />
         </div>
         <div class="field">
           <label>Código da caixinha <span class="hint">(até 10 caracteres, para abrir depois)</span></label>
@@ -156,8 +156,8 @@
           <div class="field">
             <label for="currencyPreset">Moeda</label>
             <select id="currencyPreset">
-              <option value="USD|$">Dólar ($)</option>
               <option value="BRL|R$">Real (R$)</option>
+              <option value="USD|$">Dólar ($)</option>
               <option value="EUR|€">Euro (€)</option>
               <option value="GBP|£">Libra (£)</option>
               <option value="ARS|$">Peso argentino ($)</option>
@@ -188,6 +188,7 @@
         </div>
         <div class="modal-foot">
           <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="button" class="btn btn-danger" id="tripDeleteBtn" hidden>Deletar</button>
           <button type="submit" class="btn btn-primary" id="tripSubmitBtn">Criar viagem</button>
         </div>
       </form>
@@ -272,10 +273,30 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="deletePassModal" hidden>
+    <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="deletePassTitle">
+      <div class="modal-head">
+        <h2 id="deletePassTitle">Confirmar exclusão</h2>
+      </div>
+      <div class="modal-body">
+        <p id="deletePassMessage"></p>
+        <div class="field">
+          <label for="deletePassInput">Senha de deleção</label>
+          <input type="password" id="deletePassInput" placeholder="Digite a senha" autocomplete="off" />
+          <span class="hint">Dica: é a placa do Konan.</span>
+        </div>
+        <p class="gate-error" id="deletePassError" hidden>Senha incorreta.</p>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="button" class="btn btn-danger" id="deletePassOkBtn">Deletar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="toastHost" class="toast-host" aria-live="polite"></div>
 
   <script src="assets/js/calc.js"></script>
-  <script src="data/seeds.js"></script>
   <script src="assets/js/store.js"></script>
   <script src="assets/js/sync.js"></script>
   <script src="assets/js/app.js"></script>

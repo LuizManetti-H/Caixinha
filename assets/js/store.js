@@ -1,5 +1,5 @@
 /* Caixinha · Camada de dados
- * Fonte de verdade: localStorage. Na primeira execução, semeia a partir de data/trips.json.
+ * Fonte de verdade: localStorage. Na primeira execução, semeia a partir de data/trips.json (via fetch).
  * Cada viagem é um objeto independente e pode ser exportada/importada como .json.
  */
 (function (global) {
@@ -7,8 +7,6 @@
 
   const LS_TRIPS = 'caixinha.trips.v1';
   const LS_CURRENT = 'caixinha.currentTrip.v1';
-  const LS_THEME = 'caixinha.theme.v1';
-  const LS_SEEDED = 'caixinha.seeded.v1';
   const LS_SEEDREVS = 'caixinha.seedRevs.v1';
 
   function uid(prefix) {
@@ -188,14 +186,12 @@
     saveTrips(trips);
   }
 
-  // ---- Corrente / tema ----
+  // ---- Corrente ----
   function getCurrent() { return localStorage.getItem(LS_CURRENT); }
   function setCurrent(id) {
     if (id) localStorage.setItem(LS_CURRENT, id);
     else localStorage.removeItem(LS_CURRENT);
   }
-  function getTheme() { return localStorage.getItem(LS_THEME) || 'light'; }
-  function setTheme(t) { localStorage.setItem(LS_THEME, t); }
 
   // ---- Semeadura a partir dos arquivos em /data ----
   //
@@ -237,15 +233,8 @@
   }
 
   async function seedFromFiles() {
-    // 1) Seed embutido (data/seeds.js) — funciona também via file:// (sem servidor).
-    if (Array.isArray(global.CAIXINHA_SEEDS) && global.CAIXINHA_SEEDS.length) {
-      const firstId = reconcileSeeds(global.CAIXINHA_SEEDS);
-      if (!getCurrent() && firstId) setCurrent(firstId);
-      localStorage.setItem(LS_SEEDED, '1');
-      return;
-    }
-
-    // 2) Fallback via fetch (quando servido por http/https, ex.: GitHub Pages).
+    // Carrega as caixinhas do repositório (data/trips.json) via fetch.
+    // Requer http(s) — o site é usado direto pelo GitHub Pages.
     try {
       const manRes = await fetch('data/trips.json', { cache: 'no-store' });
       if (!manRes.ok) throw new Error('manifest');
@@ -265,8 +254,6 @@
       }
     } catch (e) {
       // Sem servidor/arquivos: segue vazio (usuário cria manualmente).
-    } finally {
-      localStorage.setItem(LS_SEEDED, '1');
     }
   }
 
@@ -287,8 +274,6 @@
     deleteExpense: deleteExpense,
     getCurrent: getCurrent,
     setCurrent: setCurrent,
-    getTheme: getTheme,
-    setTheme: setTheme,
     seedFromFiles: seedFromFiles,
     reconcile: reconcileSeeds,
     setRev: setSeedRev

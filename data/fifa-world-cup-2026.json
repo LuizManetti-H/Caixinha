@@ -773,6 +773,18 @@
         1
       ],
       "desc": "Zelle - ajuste final de contas com Monts"
+    },
+    {
+      "id": "exp-msj3ilfw-k8zqf",
+      "date": "2026-08-07",
+      "value": 99999,
+      "payer": "Gerson",
+      "parts": [
+        1,
+        1,
+        1
+      ],
+      "desc": "Teste"
     }
   ]
 }

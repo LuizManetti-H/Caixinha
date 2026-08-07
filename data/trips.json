@@ -1,5 +1,12 @@
 {
   "trips": [
-    { "id": "fifa-world-cup-2026", "file": "fifa-world-cup-2026.json" }
+    {
+      "id": "fifa-world-cup-2026",
+      "file": "fifa-world-cup-2026.json"
+    },
+    {
+      "id": "madrid-26",
+      "file": "madrid-26.json"
+    }
   ]
 }

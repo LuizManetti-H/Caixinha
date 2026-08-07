@@ -363,7 +363,16 @@ body.is-gate .gate { align-items: start; min-height: 0; padding: 0; }
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 22px; margin-bottom: 15px; box-shadow: var(--shadow-sm);
 }
-.panel[data-view="despesas"] { padding: 7.5px; border-radius: var(--radius); }
+/* Despesas: a "caixa" é o cabeçalho fixo (topo arredondado) + tabela (base arredondada); o fundo da página aparece no gap e nos cantos. */
+.panel[data-view="despesas"] { padding: 0; background: transparent; border: none; box-shadow: none; border-radius: 0; }
+.panel[data-view="despesas"] .panel-head { margin-bottom: 4px; }
+.panel[data-view="despesas"] .table-wrap {
+  margin: 0; padding: 0 7.5px;
+  background: var(--surface); border: 1px solid var(--border); border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+.panel[data-view="despesas"].is-empty .table-wrap { display: none; }
+.panel[data-view="despesas"].is-empty .exp-sticky-inner { border-bottom: 1px solid var(--border); border-radius: var(--radius); }
 .panel-balance { padding: 7.5px; border-radius: var(--radius); }
 .panel-balance .panel-head { flex-direction: column; align-items: flex-start; gap: 0; }
 .panel-balance .panel-sub { margin-top: -5px; }
@@ -433,6 +442,29 @@ table { border-collapse: collapse; width: 100%; }
 
 .expenses-table { table-layout: fixed; width: 100%; }
 .expenses-table td { padding: 15px 5px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border); }
+/* Cabeçalho fixo ao rolar. Camada externa = fundo real da página (gradiente fixo) que cobre linhas no gap e nos cantos; camada interna = caixa branca com topo arredondado. */
+.exp-sticky {
+  position: sticky; top: 84px; z-index: 15;
+  margin-top: -8px; padding-top: 8px;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1200px 600px at 100% -10%, rgba(157, 107, 255, .10), transparent 60%),
+    radial-gradient(1000px 500px at -10% 0%, rgba(109, 94, 252, .08), transparent 55%);
+  background-attachment: fixed;
+}
+.exp-sticky-inner {
+  background: var(--surface);
+  border: 1px solid var(--border); border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 7.5px 7.5px 0;
+}
+.exp-fam-head {
+  display: grid;
+  grid-template-columns: repeat(calc(var(--cols, 5) - 2), minmax(0, 1fr)) 72px;
+  column-gap: 5px; align-items: center;
+  padding: 3px 5px 7px; border-bottom: 1px solid var(--border);
+}
+.exp-fam-head .fam-avatar { justify-self: center; width: 30px; height: 30px; font-size: 13px; border-radius: 9px; }
 .expenses-table tbody tr { transition: background .12s; }
 .expenses-table tbody tr:hover { background: var(--bg-soft); }
 .exp-cell {

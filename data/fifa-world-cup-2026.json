@@ -1,7 +1,7 @@
 {
   "id": "fifa-world-cup-2026",
   "code": "FWC26",
-  "name": "FIFA World Cup - 2026",
+  "name": "FIFA World Cup 2026",
   "currency": {
     "code": "USD",
     "symbol": "$"
@@ -9,7 +9,7 @@
   "families": [
     "Gerson",
     "Luiz",
-    "Tio Paulo"
+    "Monts"
   ],
   "colors": [
     {
@@ -25,7 +25,7 @@
     {
       "bg": "#ffffff",
       "fg": "#e5484d",
-      "border": "#000000"
+      "border": "#e5484d"
     }
   ],
   "createdAt": "2026-05-12",
@@ -36,9 +36,9 @@
       "value": 566.43,
       "payer": "Luiz",
       "parts": [
-        0,
-        0,
-        1
+        0.0,
+        0.0,
+        1.0
       ],
       "desc": "Hotel Filadélfia - Doubletree Hilton"
     },
@@ -48,9 +48,9 @@
       "value": 104.06,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        0
+        1.0,
+        1.0,
+        0.0
       ],
       "desc": "BJ's - queijo parmesão"
     },
@@ -60,9 +60,9 @@
       "value": 52.03,
       "payer": "Gerson",
       "parts": [
-        0,
-        1,
-        0
+        0.0,
+        1.0,
+        0.0
       ],
       "desc": "Wise - quitação c/ Luiz"
     },
@@ -72,9 +72,9 @@
       "value": 143.91,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Walmart - mercado primeiro dia"
     },
@@ -82,11 +82,11 @@
       "id": "wc-005",
       "date": "2026-06-28",
       "value": 41.86,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Publix - sorvete e torta de limão"
     },
@@ -94,11 +94,11 @@
       "id": "wc-006",
       "date": "2026-06-28",
       "value": 512.29,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Total Wine - vinhos para o grupo"
     },
@@ -106,11 +106,11 @@
       "id": "wc-007",
       "date": "2026-06-28",
       "value": 45.44,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Total Wine - cervejas para o grupo"
     },
@@ -118,11 +118,11 @@
       "id": "wc-008",
       "date": "2026-06-28",
       "value": 32.96,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Seabra - papaya e outras coisinhas"
     },
@@ -132,9 +132,9 @@
       "value": 89.75,
       "payer": "Luiz",
       "parts": [
-        1,
-        4,
-        0
+        1.0,
+        4.0,
+        0.0
       ],
       "desc": "Mister O1 - pizza mesa Luiz + Lucca"
     },
@@ -144,9 +144,9 @@
       "value": 168.26,
       "payer": "Gerson",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Walmart - mercado do dia"
     },
@@ -156,9 +156,9 @@
       "value": 88.25,
       "payer": "Gerson",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "BJs - mercado do dia"
     },
@@ -168,9 +168,9 @@
       "value": 5.99,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Publix - sorvete"
     },
@@ -180,9 +180,9 @@
       "value": 289.6,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Seabra - carnes"
     },
@@ -192,21 +192,21 @@
       "value": 42.59,
       "payer": "Luiz",
       "parts": [
-        1,
-        0,
-        0
+        1.0,
+        0.0,
+        0.0
       ],
       "desc": "Microsoft - Windows 11 Pro"
     },
     {
       "id": "wc-015",
       "date": "2026-07-03",
-      "value": 30,
+      "value": 30.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        0,
-        1
+        1.0,
+        0.0,
+        1.0
       ],
       "desc": "Manicure - Paula e Paty"
     },
@@ -216,21 +216,21 @@
       "value": 32.1,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Pizza Hut - 3 pizzas"
     },
     {
       "id": "wc-017",
       "date": "2026-07-04",
-      "value": 18,
+      "value": 18.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Pedágio - Filadélfia"
     },
@@ -240,9 +240,9 @@
       "value": 518.25,
       "payer": "Gerson",
       "parts": [
-        1,
-        0,
-        1
+        1.0,
+        0.0,
+        1.0
       ],
       "desc": "Rent Cars - aluguel do carro de 06/25 a 07/04"
     },
@@ -252,21 +252,21 @@
       "value": 32.66,
       "payer": "Luiz",
       "parts": [
-        1,
-        0,
-        0
+        1.0,
+        0.0,
+        0.0
       ],
       "desc": "Jantar - rodada de pizza do Gerson"
     },
     {
       "id": "wc-020",
       "date": "2026-07-06",
-      "value": 30,
+      "value": 30.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Gasolina - Van"
     },
@@ -276,21 +276,21 @@
       "value": 51.99,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Estacionamento - Van - Filadelfia"
     },
     {
       "id": "wc-022",
       "date": "2026-07-07",
-      "value": 50,
+      "value": 50.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Gasolina - Van"
     },
@@ -298,11 +298,11 @@
       "id": "wc-023",
       "date": "2026-07-07",
       "value": 5909.88,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        2
+        1.0,
+        1.0,
+        2.0
       ],
       "desc": "Ingressos - França x Marrocos"
     },
@@ -312,9 +312,9 @@
       "value": 4604.72,
       "payer": "Luiz",
       "parts": [
-        2,
-        2,
-        0
+        2.0,
+        2.0,
+        0.0
       ],
       "desc": "Ingressos - França x Marrocos"
     },
@@ -324,9 +324,9 @@
       "value": 130.05,
       "payer": "Gerson",
       "parts": [
-        1,
-        1,
-        0
+        1.0,
+        1.0,
+        0.0
       ],
       "desc": "Almoço - Angelos NYC"
     },
@@ -336,9 +336,9 @@
       "value": 40.64,
       "payer": "Gerson",
       "parts": [
-        1,
-        1,
-        0
+        1.0,
+        1.0,
+        0.0
       ],
       "desc": "Sorvete - Central Park NYC"
     },
@@ -346,11 +346,11 @@
       "id": "wc-027",
       "date": "2026-07-08",
       "value": 290.6,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Estacionamento - França x Marrocos"
     },
@@ -360,21 +360,21 @@
       "value": 661.09,
       "payer": "Gerson",
       "parts": [
-        1,
-        0,
-        1
+        1.0,
+        0.0,
+        1.0
       ],
       "desc": "Jantar italiano - NYC"
     },
     {
       "id": "wc-029",
       "date": "2026-07-09",
-      "value": 200,
+      "value": 200.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Estacionamento - Van - NYC"
     },
@@ -384,21 +384,21 @@
       "value": 94.5,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Gasolina - Van"
     },
     {
       "id": "wc-031",
       "date": "2026-07-10",
-      "value": 29,
+      "value": 29.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Estacionamento - Van - Harvard"
     },
@@ -417,12 +417,12 @@
     {
       "id": "wc-033",
       "date": "2026-07-10",
-      "value": 60,
-      "payer": "Tio Paulo",
+      "value": 60.0,
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Estacionamento - Van - Boston"
     },
@@ -432,9 +432,9 @@
       "value": 11.94,
       "payer": "Gerson",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Uber - Boston - pegar van no hotel"
     },
@@ -453,12 +453,12 @@
     {
       "id": "wc-036",
       "date": "2026-07-11",
-      "value": 133,
+      "value": 133.0,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Estacionamento - Van - Hotel de Boston"
     },
@@ -468,9 +468,9 @@
       "value": 1030.64,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Aluguel da Van - PHL - BOS"
     },
@@ -480,9 +480,9 @@
       "value": 72.01,
       "payer": "Gerson",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Jantar - Yard House - Boca Raton Mizner"
     },
@@ -492,9 +492,9 @@
       "value": 25.69,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Gasolina - Truck Dodge RAM"
     },
@@ -504,9 +504,9 @@
       "value": 80.05,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Aldi - Compras de mercado"
     },
@@ -514,11 +514,11 @@
       "id": "wc-041",
       "date": "2026-07-12",
       "value": 92.22,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Aluguel da Truck - Dodge RAM"
     },
@@ -540,9 +540,9 @@
       "value": 87.28,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Walmart - compras de mercado"
     },
@@ -552,9 +552,9 @@
       "value": 30.06,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Publix - sorvetes e outras coisas"
     },
@@ -578,7 +578,7 @@
       "parts": [
         30.605,
         30.605,
-        0
+        0.0
       ],
       "desc": "BJ's Restaurant - Lucca e Ju"
     },
@@ -612,9 +612,9 @@
       "value": 30.02,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Walmart - frutinhas e leite"
     },
@@ -624,9 +624,9 @@
       "value": 30.32,
       "payer": "Luiz",
       "parts": [
-        0,
-        1,
-        1
+        0.0,
+        1.0,
+        1.0
       ],
       "desc": "Seabra - carne moida - kibe cru"
     },
@@ -636,9 +636,9 @@
       "value": 8.86,
       "payer": "Luiz",
       "parts": [
-        0,
-        1,
-        1
+        0.0,
+        1.0,
+        1.0
       ],
       "desc": "Walmart - itens kibe cru"
     },
@@ -648,9 +648,9 @@
       "value": 5.98,
       "payer": "Luiz",
       "parts": [
-        0,
-        1,
-        1
+        0.0,
+        1.0,
+        1.0
       ],
       "desc": "Yalla - pao sírio"
     },
@@ -660,9 +660,9 @@
       "value": 371.24,
       "payer": "Gerson",
       "parts": [
-        1,
-        0,
-        1
+        1.0,
+        0.0,
+        1.0
       ],
       "desc": "Rent Cars - aluguel do carro de 07/11 a 07/19"
     },
@@ -672,21 +672,21 @@
       "value": 65.33,
       "payer": "Luiz",
       "parts": [
-        0,
-        1,
-        1
+        0.0,
+        1.0,
+        1.0
       ],
       "desc": "BJs - mercado do dia"
     },
     {
       "id": "wc-055",
       "date": "2026-07-23",
-      "value": 500,
+      "value": 500.0,
       "payer": "Gerson",
       "parts": [
-        0,
-        1,
-        0
+        0.0,
+        1.0,
+        0.0
       ],
       "desc": "Pagamento parcial do Gerson ao Luiz"
     },
@@ -694,11 +694,11 @@
       "id": "wc-056",
       "date": "2026-07-25",
       "value": 10.16,
-      "payer": "Tio Paulo",
+      "payer": "Monts",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Pedágio(s) da Truck"
     },
@@ -708,9 +708,9 @@
       "value": 144.35,
       "payer": "Gerson",
       "parts": [
-        1,
-        0,
-        1
+        1.0,
+        0.0,
+        1.0
       ],
       "desc": "Budget rent a car - Primeiro carro"
     },
@@ -720,9 +720,9 @@
       "value": 1477.39,
       "payer": "Gerson",
       "parts": [
-        0,
-        1,
-        0
+        0.0,
+        1.0,
+        0.0
       ],
       "desc": "Pagamento parcial do Gerson ao Luiz"
     },
@@ -732,9 +732,9 @@
       "value": 15.9,
       "payer": "Luiz",
       "parts": [
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0
       ],
       "desc": "Avis - congestion charge"
     },
@@ -744,9 +744,9 @@
       "value": 130.07,
       "payer": "Gerson",
       "parts": [
-        1,
-        0,
-        1
+        1.0,
+        0.0,
+        1.0
       ],
       "desc": "Budget rent a car - Segundo carro"
     },
@@ -756,9 +756,9 @@
       "value": 23.95,
       "payer": "Luiz",
       "parts": [
-        0,
-        0,
-        1
+        0.0,
+        0.0,
+        1.0
       ],
       "desc": "Amazon - Cadeados de mala"
     },
@@ -768,9 +768,9 @@
       "value": 340.26,
       "payer": "Luiz",
       "parts": [
-        0,
-        0,
-        1
+        0.0,
+        0.0,
+        1.0
       ],
       "desc": "Zelle - ajuste final de contas com Monts"
     }

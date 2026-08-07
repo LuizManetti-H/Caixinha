@@ -531,8 +531,16 @@
 
   function renderExpenses(trip) {
     const table = $('#expensesTable');
+    const panelEl = table.closest('.panel');
     const fams = trip.families;
     const q = state.search.trim().toLowerCase();
+
+    // Ícones das famílias no topo, alinhados às colunas da lista.
+    const head = $('#expensesHead');
+    head.style.setProperty('--cols', fams.length + 2);
+    head.innerHTML = fams.map(function (f, i) {
+      return '<span class="fam-avatar" style="grid-column:' + (i + 1) + ';' + avatarStyle(trip, i) + '" title="' + escapeHtml(f) + '">' + escapeHtml(initials(f)) + '</span>';
+    }).join('');
 
     let list = trip.expenses.slice();
     if (q) {
@@ -549,9 +557,13 @@
 
     if (trip.expenses.length === 0) {
       table.innerHTML = '';
+      head.hidden = true;
+      if (panelEl) panelEl.classList.add('is-empty');
       $('#expensesEmpty').hidden = false;
       return;
     }
+    head.hidden = false;
+    if (panelEl) panelEl.classList.remove('is-empty');
     $('#expensesEmpty').hidden = true;
 
     let html = '<tbody>';

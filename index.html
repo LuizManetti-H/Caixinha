@@ -115,13 +115,18 @@
 
       <!-- Expenses -->
       <section class="panel" data-view="despesas">
-        <div class="panel-head">
-          <h2>Lista de despesas</h2>
-          <div class="panel-head-actions">
-            <div class="search-box">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
-              <input type="search" id="expenseSearch" placeholder="Buscar despesa" />
+        <div class="exp-sticky">
+          <div class="exp-sticky-inner">
+            <div class="panel-head">
+              <h2>Lista de despesas</h2>
+              <div class="panel-head-actions">
+                <div class="search-box">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                  <input type="search" id="expenseSearch" placeholder="Buscar despesa" />
+                </div>
+              </div>
             </div>
+            <div class="exp-fam-head" id="expensesHead" aria-hidden="true" hidden></div>
           </div>
         </div>
         <div class="table-wrap">

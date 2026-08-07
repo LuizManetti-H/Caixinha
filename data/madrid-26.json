@@ -1,0 +1,27 @@
+{
+  "id": "madrid-26",
+  "code": "MADRI",
+  "name": "Madrid 26",
+  "currency": {
+    "code": "USD",
+    "symbol": "$"
+  },
+  "families": [
+    "AnaLu",
+    "JC"
+  ],
+  "colors": [
+    {
+      "bg": "#e63b7a",
+      "fg": "#ffffff",
+      "border": "#7a219e"
+    },
+    {
+      "bg": "#00f102",
+      "fg": "#1e00ae",
+      "border": "#0000cb"
+    }
+  ],
+  "expenses": [],
+  "createdAt": "2026-08-07"
+}

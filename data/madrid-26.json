@@ -44,6 +44,17 @@
         1
       ],
       "desc": "Airlines (AirEuropa)"
+    },
+    {
+      "id": "exp-msmnslnv-jpiy9",
+      "date": "2026-08-10",
+      "value": 446.97,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hotel Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

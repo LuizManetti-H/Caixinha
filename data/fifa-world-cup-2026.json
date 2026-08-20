@@ -773,6 +773,18 @@
         1
       ],
       "desc": "Zelle - ajuste final de contas com Monts"
+    },
+    {
+      "id": "exp-mt10igyg-5b2ep",
+      "date": "2026-08-20",
+      "value": 26,
+      "payer": "Luiz",
+      "parts": [
+        1,
+        0,
+        0
+      ],
+      "desc": "M365 Family"
     }
   ]
 }

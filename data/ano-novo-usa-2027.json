@@ -22,6 +22,18 @@
       "border": "#006b2e"
     }
   ],
-  "expenses": [],
+  "expenses": [
+    {
+      "id": "exp-mt28fwpj-47nol",
+      "date": "2026-08-21",
+      "value": 629.08,
+      "payer": "Luiz",
+      "parts": [
+        1,
+        0
+      ],
+      "desc": "Crédito - Caixinha Fifa 26"
+    }
+  ],
   "createdAt": "2026-08-21"
 }

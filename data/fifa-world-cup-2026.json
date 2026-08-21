@@ -785,6 +785,18 @@
         0
       ],
       "desc": "M365 Family"
+    },
+    {
+      "id": "exp-mt27ty2m-cg3us",
+      "date": "2026-08-21",
+      "value": 138.74,
+      "payer": "Gerson",
+      "parts": [
+        0,
+        0,
+        1
+      ],
+      "desc": "Quitar debito"
     }
   ]
 }

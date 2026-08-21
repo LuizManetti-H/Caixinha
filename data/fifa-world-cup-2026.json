@@ -797,6 +797,18 @@
         1
       ],
       "desc": "Acerto final Monts"
+    },
+    {
+      "id": "exp-mt28grvr-qzinm",
+      "date": "2026-08-21",
+      "value": 629.08,
+      "payer": "Gerson",
+      "parts": [
+        0,
+        1,
+        0
+      ],
+      "desc": "Divida transferida para nova Caixinha"
     }
   ]
 }

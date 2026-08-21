@@ -1,0 +1,27 @@
+{
+  "id": "ano-novo-usa-2027",
+  "code": "USA27",
+  "name": "Ano Novo - USA 2027",
+  "currency": {
+    "code": "USD",
+    "symbol": "$"
+  },
+  "families": [
+    "Gerson",
+    "Luiz"
+  ],
+  "colors": [
+    {
+      "bg": "#009c3b",
+      "fg": "#002776",
+      "border": "#ffdf00"
+    },
+    {
+      "bg": "#ffdf00",
+      "fg": "#009c3b",
+      "border": "#002776"
+    }
+  ],
+  "expenses": [],
+  "createdAt": "2026-08-21"
+}

@@ -12,14 +12,14 @@
   ],
   "colors": [
     {
-      "bg": "#009c3b",
-      "fg": "#002776",
-      "border": "#ffdf00"
+      "bg": "#ff0000",
+      "fg": "#ffffff",
+      "border": "#000000"
     },
     {
-      "bg": "#ffdf00",
-      "fg": "#009c3b",
-      "border": "#002776"
+      "bg": "#00ff91",
+      "fg": "#000000",
+      "border": "#006b2e"
     }
   ],
   "expenses": [],

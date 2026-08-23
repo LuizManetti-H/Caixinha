@@ -66,6 +66,17 @@
         1
       ],
       "desc": "Hotel Granada"
+    },
+    {
+      "id": "exp-mt6dtwh8-y6fps",
+      "date": "2026-08-23",
+      "value": 256.81,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hotel Madrid 2"
     }
   ],
   "createdAt": "2026-08-07"

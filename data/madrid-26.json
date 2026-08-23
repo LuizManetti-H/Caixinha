@@ -55,6 +55,17 @@
         1
       ],
       "desc": "Hotel Sevilla"
+    },
+    {
+      "id": "exp-mt6ay1id-k5sbk",
+      "date": "2026-08-23",
+      "value": 255.29,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hotel Granada"
     }
   ],
   "createdAt": "2026-08-07"

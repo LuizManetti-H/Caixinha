@@ -11,6 +11,10 @@
     {
       "id": "ano-novo-usa-2027",
       "file": "ano-novo-usa-2027.json"
+    },
+    {
+      "id": "acertos-contas-analu-pais",
+      "file": "acertos-contas-analu-pais.json"
     }
   ]
 }

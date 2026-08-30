@@ -1,7 +1,7 @@
 {
   "id": "acertos-contas-analu-pais",
   "code": "GASTO",
-  "name": "Acertos Contas AnaLu&Pais",
+  "name": "Acerto de Contas - AnaLu & Pais",
   "currency": {
     "code": "USD",
     "symbol": "$"
@@ -17,9 +17,9 @@
       "border": "#e292fe"
     },
     {
-      "bg": "#ffdf00",
-      "fg": "#009c3b",
-      "border": "#002776"
+      "bg": "#ffffff",
+      "fg": "#fb0000",
+      "border": "#007e00"
     }
   ],
   "expenses": [],

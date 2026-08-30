@@ -1,14 +1,14 @@
 {
   "id": "acertos-contas-analu-pais",
   "code": "GASTO",
-  "name": "Acerto de Contas - AnaLu & Pais",
+  "name": "Contas - AnaLu & Pais",
   "currency": {
     "code": "USD",
     "symbol": "$"
   },
   "families": [
     "Ana Lu",
-    "Pai Mae"
+    "Pai Mãe"
   ],
   "colors": [
     {

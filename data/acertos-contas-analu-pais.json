@@ -1,0 +1,27 @@
+{
+  "id": "acertos-contas-analu-pais",
+  "code": "GASTO",
+  "name": "Acertos Contas AnaLu&Pais",
+  "currency": {
+    "code": "USD",
+    "symbol": "$"
+  },
+  "families": [
+    "Ana Lu",
+    "Pai Mae"
+  ],
+  "colors": [
+    {
+      "bg": "#2dffbc",
+      "fg": "#002776",
+      "border": "#e292fe"
+    },
+    {
+      "bg": "#ffdf00",
+      "fg": "#009c3b",
+      "border": "#002776"
+    }
+  ],
+  "expenses": [],
+  "createdAt": "2026-08-30"
+}

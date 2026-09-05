@@ -22,6 +22,18 @@
       "border": "#007e00"
     }
   ],
-  "expenses": [],
+  "expenses": [
+    {
+      "id": "exp-mtoscgza-or9ax",
+      "date": "2026-09-05",
+      "value": 11.98,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "Dois sorvetes publix"
+    }
+  ],
   "createdAt": "2026-08-30"
 }

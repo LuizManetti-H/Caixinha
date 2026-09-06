@@ -44,6 +44,17 @@
         1
       ],
       "desc": "Aluguel do Carro"
+    },
+    {
+      "id": "exp-mtp91p7b-2vo1f",
+      "date": "2026-08-30",
+      "value": 271.98,
+      "payer": "Luiz",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hotel Kingman"
     }
   ],
   "createdAt": "2026-08-21"

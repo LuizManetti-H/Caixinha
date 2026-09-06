@@ -55,6 +55,17 @@
         1
       ],
       "desc": "Hotel Luxor - Las Vegas"
+    },
+    {
+      "id": "exp-mtp952ap-mjoq0",
+      "date": "2026-08-30",
+      "value": 271.98,
+      "payer": "Luiz",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hotel Home 2 Suites by Hilton - Kingman"
     }
   ],
   "createdAt": "2026-08-21"

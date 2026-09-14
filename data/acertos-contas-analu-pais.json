@@ -44,6 +44,17 @@
         1
       ],
       "desc": "Pig Roast Pai+Mae"
+    },
+    {
+      "id": "exp-mu0izyoc-7nywy",
+      "date": "2026-09-06",
+      "value": 12.83,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "GymPass Marina"
     }
   ],
   "createdAt": "2026-08-30"

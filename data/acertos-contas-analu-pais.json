@@ -66,6 +66,17 @@
         0
       ],
       "desc": "Walmart para AnaLu (Desodorante/Creme)"
+    },
+    {
+      "id": "exp-mu0mcqbh-z2052",
+      "date": "2026-09-14",
+      "value": 6,
+      "payer": "Pai Mãe",
+      "parts": [
+        1,
+        0
+      ],
+      "desc": "Filme Amazon Prime"
     }
   ],
   "createdAt": "2026-08-30"

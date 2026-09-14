@@ -33,6 +33,17 @@
         1
       ],
       "desc": "Dois sorvetes publix"
+    },
+    {
+      "id": "exp-mu0iyy6w-bx8lb",
+      "date": "2026-09-14",
+      "value": 96.4,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "Pig Roast Pai+Mae"
     }
   ],
   "createdAt": "2026-08-30"

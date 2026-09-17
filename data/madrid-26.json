@@ -88,6 +88,17 @@
         1
       ],
       "desc": "Prado Museum"
+    },
+    {
+      "id": "exp-mu4x23qt-gjx9g",
+      "date": "2026-09-16",
+      "value": 47.04,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Palácio Real Tickets"
     }
   ],
   "createdAt": "2026-08-07"

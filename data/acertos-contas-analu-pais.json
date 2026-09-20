@@ -88,6 +88,17 @@
         1
       ],
       "desc": "BJs(suco uva,leite,água)"
+    },
+    {
+      "id": "exp-mua9k1cl-x606j",
+      "date": "2026-09-20",
+      "value": 14.2,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "Seabra (2 bandeja frango)"
     }
   ],
   "createdAt": "2026-08-30"

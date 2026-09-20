@@ -99,6 +99,17 @@
         1
       ],
       "desc": "Seabra (2 bandeja frango)"
+    },
+    {
+      "id": "exp-mua9kg28-6bd7b",
+      "date": "2026-09-20",
+      "value": 3.49,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "Seabra (batata palha)"
     }
   ],
   "createdAt": "2026-08-30"

@@ -77,6 +77,17 @@
         0
       ],
       "desc": "Filme Amazon Prime"
+    },
+    {
+      "id": "exp-mua9iy9p-ln6fy",
+      "date": "2026-09-20",
+      "value": 30.86,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "BJs(suco uva,leite,água)"
     }
   ],
   "createdAt": "2026-08-30"

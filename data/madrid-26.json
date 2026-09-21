@@ -99,6 +99,17 @@
         1
       ],
       "desc": "Palácio Real Tickets"
+    },
+    {
+      "id": "exp-mual9y1k-aiscq",
+      "date": "2026-09-21",
+      "value": 53.86,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Alhambra Ticket"
     }
   ],
   "createdAt": "2026-08-07"

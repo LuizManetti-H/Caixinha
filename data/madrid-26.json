@@ -110,6 +110,17 @@
         1
       ],
       "desc": "Alhambra Ticket"
+    },
+    {
+      "id": "exp-mubf5th6-0xjxu",
+      "date": "2026-09-21",
+      "value": 108.83,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Real Madrid Tour"
     }
   ],
   "createdAt": "2026-08-07"

@@ -121,6 +121,17 @@
         1
       ],
       "desc": "Cash Juh"
+    },
+    {
+      "id": "exp-mund60ux-rasnl",
+      "date": "2026-09-30",
+      "value": 12.69,
+      "payer": "Ana Lu",
+      "parts": [
+        1,
+        0
+      ],
+      "desc": "Freixenet"
     }
   ],
   "createdAt": "2026-08-30"

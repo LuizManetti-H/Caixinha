@@ -110,6 +110,17 @@
         1
       ],
       "desc": "Seabra (batata palha)"
+    },
+    {
+      "id": "exp-mund5o6g-v9npk",
+      "date": "2026-09-30",
+      "value": 11.4,
+      "payer": "Ana Lu",
+      "parts": [
+        0,
+        1
+      ],
+      "desc": "Cash Juh"
     }
   ],
   "createdAt": "2026-08-30"

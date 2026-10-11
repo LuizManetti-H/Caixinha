@@ -132,6 +132,17 @@
         1
       ],
       "desc": "Madrid-Sevilla Train Renfe"
+    },
+    {
+      "id": "exp-mv49lc16-u0f25",
+      "date": "2026-10-11",
+      "value": 117.9,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Sevilla-Granada RENFE Train"
     }
   ],
   "createdAt": "2026-08-07"

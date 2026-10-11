@@ -121,6 +121,17 @@
         1
       ],
       "desc": "Real Madrid Tour"
+    },
+    {
+      "id": "exp-mv491mku-xcx0e",
+      "date": "2026-10-11",
+      "value": 42.22,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Madrid-Sevilla Train Renfe"
     }
   ],
   "createdAt": "2026-08-07"

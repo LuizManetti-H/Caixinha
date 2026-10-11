@@ -143,6 +143,17 @@
         1
       ],
       "desc": "Sevilla-Granada RENFE Train"
+    },
+    {
+      "id": "exp-mv4b7ztr-m1msn",
+      "date": "2026-10-11",
+      "value": 165.86,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Granada-Madrid RENFE Train Tickets"
     }
   ],
   "createdAt": "2026-08-07"

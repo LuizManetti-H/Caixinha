@@ -154,6 +154,17 @@
         1
       ],
       "desc": "Madrid-Sevilla Airport"
+    },
+    {
+      "id": "exp-mw2v3l2g-kcbic",
+      "date": "2026-11-05",
+      "value": 87.58,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "GetYourGuide TOLEDO"
     }
   ],
   "createdAt": "2026-08-07"

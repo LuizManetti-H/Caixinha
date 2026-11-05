@@ -176,6 +176,17 @@
         1
       ],
       "desc": "Cathedral Toledo"
+    },
+    {
+      "id": "exp-mw45qnqd-ez2tp",
+      "date": "2026-11-05",
+      "value": 34.13,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Uber MIA Airport"
     }
   ],
   "createdAt": "2026-08-07"

@@ -198,6 +198,17 @@
         1
       ],
       "desc": "PizzaHut Airport"
+    },
+    {
+      "id": "exp-mw52rli7-nial9",
+      "date": "2026-11-06",
+      "value": 17.81,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Metrô 10 Trips"
     }
   ],
   "createdAt": "2026-08-07"

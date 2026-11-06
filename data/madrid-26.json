@@ -187,6 +187,17 @@
         1
       ],
       "desc": "Uber MIA Airport"
+    },
+    {
+      "id": "exp-mw48b0f1-arhqo",
+      "date": "2026-11-06",
+      "value": 18.35,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "PizzaHut Airport"
     }
   ],
   "createdAt": "2026-08-07"

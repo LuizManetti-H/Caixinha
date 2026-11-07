@@ -209,6 +209,17 @@
         1
       ],
       "desc": "Metrô 10 Trips"
+    },
+    {
+      "id": "exp-mw62oo2y-t246h",
+      "date": "2026-11-07",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Starbucks Breakfast"
     }
   ],
   "createdAt": "2026-08-07"

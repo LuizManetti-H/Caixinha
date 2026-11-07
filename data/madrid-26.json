@@ -231,6 +231,17 @@
         1
       ],
       "desc": "El Gaucho Lunch"
+    },
+    {
+      "id": "exp-mw65hhq2-qlphl",
+      "date": "2026-11-06",
+      "value": 7.33,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Chocolatería San Ginés"
     }
   ],
   "createdAt": "2026-08-07"

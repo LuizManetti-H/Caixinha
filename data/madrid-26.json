@@ -242,6 +242,17 @@
         1
       ],
       "desc": "Chocolatería San Ginés"
+    },
+    {
+      "id": "exp-mw65i2yi-9xpss",
+      "date": "2026-11-06",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Água - Dia"
     }
   ],
   "createdAt": "2026-08-07"

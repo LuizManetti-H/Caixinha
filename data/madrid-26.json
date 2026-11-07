@@ -253,6 +253,17 @@
         1
       ],
       "desc": "Água - Dia"
+    },
+    {
+      "id": "exp-mw6dnbme-ktq2y",
+      "date": "2026-11-07",
+      "value": 47.24,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "SantaFe Restaurante"
     }
   ],
   "createdAt": "2026-08-07"

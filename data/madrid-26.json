@@ -275,6 +275,17 @@
         1
       ],
       "desc": "Sinagogue Santa Maria"
+    },
+    {
+      "id": "exp-mw6irwbd-12pgh",
+      "date": "2026-11-07",
+      "value": 9.78,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "San Juan De Los Reyes"
     }
   ],
   "createdAt": "2026-08-07"

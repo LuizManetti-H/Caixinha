@@ -286,6 +286,17 @@
         1
       ],
       "desc": "San Juan De Los Reyes"
+    },
+    {
+      "id": "exp-mw6vott9-572yz",
+      "date": "2026-11-07",
+      "value": 109.55,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "El Botin Dinner"
     }
   ],
   "createdAt": "2026-08-07"

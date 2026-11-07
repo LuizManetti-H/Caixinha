@@ -220,6 +220,17 @@
         1
       ],
       "desc": "Starbucks Breakfast"
+    },
+    {
+      "id": "exp-mw65gw0p-vzfbp",
+      "date": "2026-11-06",
+      "value": 99.83,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "El Gaucho Lunch"
     }
   ],
   "createdAt": "2026-08-07"

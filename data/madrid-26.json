@@ -264,6 +264,17 @@
         1
       ],
       "desc": "SantaFe Restaurante"
+    },
+    {
+      "id": "exp-mw6idesb-tslo5",
+      "date": "2026-11-07",
+      "value": 9.78,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Sinagogue Santa Maria"
     }
   ],
   "createdAt": "2026-08-07"

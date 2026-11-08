@@ -330,6 +330,17 @@
         1
       ],
       "desc": "Dubliners NFL Day"
+    },
+    {
+      "id": "exp-mw88hges-g94l2",
+      "date": "2026-11-08",
+      "value": 104.78,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Segovia DayTrip"
     }
   ],
   "createdAt": "2026-08-07"

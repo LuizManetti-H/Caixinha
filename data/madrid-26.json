@@ -308,6 +308,17 @@
         1
       ],
       "desc": "Galia - Pastel de Natas"
+    },
+    {
+      "id": "exp-mw88f6v8-he63e",
+      "date": "2026-11-08",
+      "value": 0.22,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Bag Prado Museum"
     }
   ],
   "createdAt": "2026-08-07"

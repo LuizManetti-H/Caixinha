@@ -297,6 +297,17 @@
         1
       ],
       "desc": "El Botin Dinner"
+    },
+    {
+      "id": "exp-mw7kvsa3-ad8m8",
+      "date": "2026-11-07",
+      "value": 13.48,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Galia - Pastel de Natas"
     }
   ],
   "createdAt": "2026-08-07"

@@ -319,6 +319,17 @@
         1
       ],
       "desc": "Bag Prado Museum"
+    },
+    {
+      "id": "exp-mw88gj9x-gk3ii",
+      "date": "2026-11-08",
+      "value": 31.46,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Dubliners NFL Day"
     }
   ],
   "createdAt": "2026-08-07"

@@ -363,6 +363,17 @@
         1
       ],
       "desc": "Restaurant Segovia"
+    },
+    {
+      "id": "exp-mw9pm2po-17z41",
+      "date": "2026-11-09",
+      "value": 2.25,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Water Alcazar"
     }
   ],
   "createdAt": "2026-08-07"

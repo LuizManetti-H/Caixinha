@@ -407,6 +407,17 @@
         1
       ],
       "desc": "Pata Negra"
+    },
+    {
+      "id": "exp-mw9pohyv-kcxfq",
+      "date": "2026-11-09",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "100 montaditos food"
     }
   ],
   "createdAt": "2026-08-07"

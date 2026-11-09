@@ -352,6 +352,17 @@
         1
       ],
       "desc": "Hundred Burger"
+    },
+    {
+      "id": "exp-mw9pljih-zilnb",
+      "date": "2026-11-09",
+      "value": 53.37,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Restaurant Segovia"
     }
   ],
   "createdAt": "2026-08-07"

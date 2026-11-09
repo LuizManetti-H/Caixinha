@@ -396,6 +396,17 @@
         1
       ],
       "desc": "Alcazar Tickets"
+    },
+    {
+      "id": "exp-mw9pnul7-me6qu",
+      "date": "2026-11-09",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Pata Negra"
     }
   ],
   "createdAt": "2026-08-07"

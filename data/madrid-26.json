@@ -374,6 +374,17 @@
         1
       ],
       "desc": "Water Alcazar"
+    },
+    {
+      "id": "exp-mw9pmvfm-tv3eo",
+      "date": "2026-11-09",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Umbrella + Poncho"
     }
   ],
   "createdAt": "2026-08-07"

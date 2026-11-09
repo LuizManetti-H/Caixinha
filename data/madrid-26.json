@@ -440,6 +440,17 @@
         1
       ],
       "desc": "Hoodie Segovia"
+    },
+    {
+      "id": "exp-mw9we68g-72429",
+      "date": "2026-11-09",
+      "value": 68.94,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "ALSA Granada-Madrid Bus"
     }
   ],
   "createdAt": "2026-08-07"

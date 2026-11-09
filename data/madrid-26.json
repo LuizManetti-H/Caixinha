@@ -385,6 +385,17 @@
         1
       ],
       "desc": "Umbrella + Poncho"
+    },
+    {
+      "id": "exp-mw9pneeu-kb4xt",
+      "date": "2026-11-09",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Alcazar Tickets"
     }
   ],
   "createdAt": "2026-08-07"

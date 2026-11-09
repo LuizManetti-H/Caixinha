@@ -429,6 +429,17 @@
         1
       ],
       "desc": "100montadito drink"
+    },
+    {
+      "id": "exp-mw9wbu58-ez38w",
+      "date": "2026-11-09",
+      "value": 24.72,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Hoodie Segovia"
     }
   ],
   "createdAt": "2026-08-07"

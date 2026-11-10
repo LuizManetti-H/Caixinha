@@ -517,6 +517,17 @@
         1
       ],
       "desc": "Water - Carrefour"
+    },
+    {
+      "id": "exp-mwb8fy10-uxqvz",
+      "date": "2026-11-10",
+      "value": 40.3,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Casa Morales Dinner"
     }
   ],
   "createdAt": "2026-08-07"

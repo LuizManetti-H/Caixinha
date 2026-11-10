@@ -539,6 +539,17 @@
         1
       ],
       "desc": "Bag Carrefour"
+    },
+    {
+      "id": "exp-mwb8jbmv-u7djd",
+      "date": "2026-11-10",
+      "value": 4.72,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Snack Chocolate - Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

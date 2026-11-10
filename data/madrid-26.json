@@ -451,6 +451,17 @@
         1
       ],
       "desc": "Sevilla Walking Tour"
+    },
+    {
+      "id": "exp-mwaejljx-mpgus",
+      "date": "2026-11-10",
+      "value": 65.1,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Flamenco Show - Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

@@ -484,6 +484,17 @@
         1
       ],
       "desc": "Bus Sevilla Airport-Hotel"
+    },
+    {
+      "id": "exp-mwb8eeg4-v0ivb",
+      "date": "2026-11-10",
+      "value": 26.16,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Taberna Coloniales - Lunch Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

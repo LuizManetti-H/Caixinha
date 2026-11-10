@@ -440,6 +440,17 @@
         1
       ],
       "desc": "ALSA Granada-Madrid Bus"
+    },
+    {
+      "id": "exp-mwadxw07-9bm8a",
+      "date": "2026-11-10",
+      "value": 56.12,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Sevilla Walking Tour"
     }
   ],
   "createdAt": "2026-08-07"

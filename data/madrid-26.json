@@ -495,6 +495,17 @@
         1
       ],
       "desc": "Taberna Coloniales - Lunch Sevilla"
+    },
+    {
+      "id": "exp-mwb8eyvw-hurym",
+      "date": "2026-11-10",
+      "value": 13.47,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Breakfast Airport Madrid"
     }
   ],
   "createdAt": "2026-08-07"

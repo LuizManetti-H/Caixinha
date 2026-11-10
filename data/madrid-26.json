@@ -506,6 +506,17 @@
         1
       ],
       "desc": "Breakfast Airport Madrid"
+    },
+    {
+      "id": "exp-mwb8fefm-chzyy",
+      "date": "2026-11-10",
+      "value": 2.53,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Water - Carrefour"
     }
   ],
   "createdAt": "2026-08-07"

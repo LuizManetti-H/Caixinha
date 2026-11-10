@@ -462,6 +462,17 @@
         1
       ],
       "desc": "Flamenco Show - Sevilla"
+    },
+    {
+      "id": "exp-mwaeqqii-13tks",
+      "date": "2026-11-10",
+      "value": 133.34,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Sevilla 3 Places Tickets/Tour"
     }
   ],
   "createdAt": "2026-08-07"

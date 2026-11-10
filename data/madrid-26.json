@@ -473,6 +473,17 @@
         1
       ],
       "desc": "Sevilla 3 Places Tickets/Tour"
+    },
+    {
+      "id": "exp-mwaq4gyr-d96qu",
+      "date": "2026-11-10",
+      "value": 13.47,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Bus Sevilla Airport-Hotel"
     }
   ],
   "createdAt": "2026-08-07"

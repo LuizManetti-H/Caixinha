@@ -528,6 +528,17 @@
         1
       ],
       "desc": "Casa Morales Dinner"
+    },
+    {
+      "id": "exp-mwb8hrbh-mj3mp",
+      "date": "2026-11-10",
+      "value": 0.13,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Bag Carrefour"
     }
   ],
   "createdAt": "2026-08-07"

@@ -561,6 +561,17 @@
         1
       ],
       "desc": "La Bartola - Sevilla"
+    },
+    {
+      "id": "exp-mwclaq6h-g22uh",
+      "date": "2026-11-11",
+      "value": 46.14,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "El Rinconcillo - Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

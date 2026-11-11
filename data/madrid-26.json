@@ -550,6 +550,17 @@
         1
       ],
       "desc": "Snack Chocolate - Sevilla"
+    },
+    {
+      "id": "exp-mwcl9alw-w4ee7",
+      "date": "2026-11-11",
+      "value": 28.02,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "La Bartola - Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

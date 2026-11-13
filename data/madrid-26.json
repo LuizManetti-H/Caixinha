@@ -572,6 +572,17 @@
         1
       ],
       "desc": "El Rinconcillo - Sevilla"
+    },
+    {
+      "id": "exp-mwerzp27-oqvqm",
+      "date": "2026-11-12",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Las Setas Tickets"
     }
   ],
   "createdAt": "2026-08-07"

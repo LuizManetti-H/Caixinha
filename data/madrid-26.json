@@ -594,6 +594,17 @@
         1
       ],
       "desc": "Dinner at Las Setas"
+    },
+    {
+      "id": "exp-mwes28t0-w7s6l",
+      "date": "2026-11-12",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Lunch - Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

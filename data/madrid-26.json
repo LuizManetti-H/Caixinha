@@ -616,6 +616,17 @@
         1
       ],
       "desc": "Breakfast La Azotea"
+    },
+    {
+      "id": "exp-mwfein6k-b2sgl",
+      "date": "2026-11-13",
+      "value": 56.96,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Lá Nonna - Restaurant Granada"
     }
   ],
   "createdAt": "2026-08-07"

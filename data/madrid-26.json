@@ -627,6 +627,17 @@
         1
       ],
       "desc": "Lá Nonna - Restaurant Granada"
+    },
+    {
+      "id": "exp-mwfemea8-1s5kg",
+      "date": "2026-11-12",
+      "value": 36.31,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Lunch Lá Sacristia Sevilla"
     }
   ],
   "createdAt": "2026-08-07"

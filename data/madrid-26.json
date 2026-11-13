@@ -605,6 +605,17 @@
         1
       ],
       "desc": "Lunch - Sevilla"
+    },
+    {
+      "id": "exp-mwes3i5v-6nik4",
+      "date": "2026-11-13",
+      "value": 0.01,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Breakfast La Azotea"
     }
   ],
   "createdAt": "2026-08-07"

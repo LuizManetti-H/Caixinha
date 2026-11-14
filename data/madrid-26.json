@@ -638,6 +638,17 @@
         1
       ],
       "desc": "Lunch Lá Sacristia Sevilla"
+    },
+    {
+      "id": "exp-mwgtsety-sptmd",
+      "date": "2026-11-14",
+      "value": 79.29,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Lá Telefónica Dinner"
     }
   ],
   "createdAt": "2026-08-07"

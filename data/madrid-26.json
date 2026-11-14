@@ -649,6 +649,17 @@
         1
       ],
       "desc": "Lá Telefónica Dinner"
+    },
+    {
+      "id": "exp-mwgtu8zq-qs31w",
+      "date": "2026-11-14",
+      "value": 7.2,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Churros Granada"
     }
   ],
   "createdAt": "2026-08-07"

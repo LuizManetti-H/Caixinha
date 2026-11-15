@@ -682,6 +682,17 @@
         1
       ],
       "desc": "Breakfast Day 1 Hotel Granada"
+    },
+    {
+      "id": "exp-mwifpxzx-mo1j0",
+      "date": "2026-11-15",
+      "value": 33.22,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Breakfast Day 2 Hotel Granada"
     }
   ],
   "createdAt": "2026-08-07"

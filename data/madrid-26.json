@@ -671,6 +671,17 @@
         1
       ],
       "desc": "McDonald’s Madrid"
+    },
+    {
+      "id": "exp-mwifpkgf-6c7m3",
+      "date": "2026-11-15",
+      "value": 33.22,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Breakfast Day 1 Hotel Granada"
     }
   ],
   "createdAt": "2026-08-07"

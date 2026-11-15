@@ -693,6 +693,17 @@
         1
       ],
       "desc": "Breakfast Day 2 Hotel Granada"
+    },
+    {
+      "id": "exp-mwifqqqr-aiadc",
+      "date": "2026-11-15",
+      "value": 19.05,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "100 Montaditos Dinner Madrid"
     }
   ],
   "createdAt": "2026-08-07"

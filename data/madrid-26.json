@@ -660,6 +660,17 @@
         1
       ],
       "desc": "Churros Granada"
+    },
+    {
+      "id": "exp-mwifo2pp-545g0",
+      "date": "2026-11-15",
+      "value": 22.51,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "McDonald’s Madrid"
     }
   ],
   "createdAt": "2026-08-07"

@@ -704,6 +704,17 @@
         1
       ],
       "desc": "100 Montaditos Dinner Madrid"
+    },
+    {
+      "id": "exp-mws31opz-bh8ty",
+      "date": "2026-11-16",
+      "value": 1.88,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Renfe"
     }
   ],
   "createdAt": "2026-08-07"

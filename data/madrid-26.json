@@ -759,6 +759,17 @@
         1
       ],
       "desc": "Uber MIA-JC House"
+    },
+    {
+      "id": "exp-mws37afj-9xb12",
+      "date": "2026-11-17",
+      "value": 1.87,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Renfe"
     }
   ],
   "createdAt": "2026-08-07"

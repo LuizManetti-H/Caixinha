@@ -770,6 +770,17 @@
         1
       ],
       "desc": "Renfe"
+    },
+    {
+      "id": "exp-mws37om4-c8ndk",
+      "date": "2026-11-17",
+      "value": 13.23,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Metro"
     }
   ],
   "createdAt": "2026-08-07"

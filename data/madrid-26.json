@@ -726,6 +726,17 @@
         1
       ],
       "desc": "Renfe again"
+    },
+    {
+      "id": "exp-mws32tmr-iiizu",
+      "date": "2026-11-16",
+      "value": 47.62,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Plaza Mahou - Bar"
     }
   ],
   "createdAt": "2026-08-07"

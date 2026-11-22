@@ -737,6 +737,17 @@
         1
       ],
       "desc": "Plaza Mahou - Bar"
+    },
+    {
+      "id": "exp-mws33emw-gr2zb",
+      "date": "2026-11-16",
+      "value": 46.29,
+      "payer": "JC",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Taberna Dinner"
     }
   ],
   "createdAt": "2026-08-07"

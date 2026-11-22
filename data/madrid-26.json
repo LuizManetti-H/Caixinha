@@ -748,6 +748,17 @@
         1
       ],
       "desc": "Taberna Dinner"
+    },
+    {
+      "id": "exp-mws36srj-vfnh5",
+      "date": "2026-11-17",
+      "value": 50.94,
+      "payer": "AnaLu",
+      "parts": [
+        1,
+        1
+      ],
+      "desc": "Uber MIA-JC House"
     }
   ],
   "createdAt": "2026-08-07"
